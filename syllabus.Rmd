@@ -1,0 +1,115 @@
+---
+title: "Sociology 722: Social Statistics I"
+author:
+  - Stephen Vaisey, Instructor
+  - Kevin Kiley, TA
+date: "Fall 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Meeting Schedule
+
++:--------------+:--------------+:-------------------+:-------------------+
+| ***Lecture*** | Tuesday       | 10:05-12:35        | Soc/Psych 329      |
++---------------+---------------+--------------------+--------------------+
+| ***Lab***     | Thursday      | 10:05-12:35        | Soc/Psych 329      |
++---------------+---------------+--------------------+--------------------+
+
+# Course Description and Objectives
+
+Sociology 722 is the first semester of a two-course sequence in statistics designed for sociology graduate students. Lab sessions will train students to use R for data management and analysis. This course is most appropriate for social science graduate students who have previously taken one semester of social statistics at the undergraduate level or who are otherwise familiar with basic statistical concepts. Students with a basic knowledge of linear regression will still benefit from the course, but those who have already done graduate-level applied statistics should talk with the instructor about finding a more suitable course.
+
+The most important thing to remember for this course is that ***statistics is not about mathematics, it is about adjudicating between rival arguments.*** In the real world, we’re never certain of anything. This does not, however, reduce competing arguments to arbitrary opinions backed up by the threat of coercive power or mindless conformity. Though both coercion and conformity are part of scientific debate, some explanations really are better than others. Statistics helps us quantify and communicate that "betterness" to other scholars. Statistics is therefore not about determining whether a particular explanation is "true" or "correct"; rather, it is about using evidence in a systematic way to determine which theories we are warranted treating as more true or more correct among the competing alternatives. Forgetting this simple point will confuse you and lead you down many unproductive roads.
+
+After successfully completing this course, you will be able to:
+
+  1. Import and manage data in R
+  2. Perform basic descriptive analysis
+  3. Create simple univariate and bivariate visualizations
+  4. Estimate and interpret basic regression models
+  5. Quantify the uncertainty of your conclusions 
+  6. Make informed judgments about (simple) competing theoretical and statistical models
+  7. Create reproducible reports using R Markdown
+  
+# Elements of the Course
+
+The course involves the following activities:
+
+### Practicing programming skills
+
+You will primarily be using DataCamp to practice your basic programming skills in R. Specific assignments will be given to you as needed.
+
+### Using the textbook
+
+We will be using Kosuke Imai's [*Quantitative Social Science: An Introduction*](http://qss.princeton.press/) as the main textbook for the course. You are expected to read the assigned section of the book *before* lecture. On your pre-lecture reading, you can skim the code and focus on the conceptual and statistical material. I don't expect you to get everything, but I do expect a good-faith effort to understand the content. A focus on coding will generally come after lecture. I may sometimes give a quiz on textbook content.
+
+Unfortunately, despite its many strengths, the book is written in "base R" syntax, which I think is a suboptimal way to get into R. A translation of the book's code into "tidyverse" syntax is [available here](https://jrnold.github.io/qss-tidy/), and I strongly suggest you focus on learning this syntax.
+
+### Active participation in lecture
+
+***Laptops may NOT be used during lecture unless otherwise specified.*** You may need paper, a pencil, and a calculator capable of exponents and logs (phone is OK but suboptimal) for some in-class exercises. Bring your computer because we might need it from time to time. But we will begin class each Tuesday with computers off.
+
+### Sakai and Slack
+
+We will use two online platforms in this class: Sakai and Slack. 
+
+Sakai will be where you submit assignments and check your grade. The syllabus will also be maintained on Sakai. 
+
+Slack is an online tool that is increasingly popular for team communication. We will use it for all class communications. If you have a question, please don't email Kevin or me; post it on Slack for a public discussion. Usually, one of your peers will be able to help you out if you have a question and they will learn something in the process!
+
+### Homework
+
+Homework will primarily be exercises, either directly from the book or posted online. These will be due by Sunday at midnight so there is time for us to see how well you're getting the concepts before the next lecture. You will submit your homework as an R Notebook compiled to HTML. The grading scale is 0 (not turned in), 1 (submitted but with problems), 2 (solid), 3 (outstanding).
+
+### Active participation in lab
+
+This is your chance to ask questions about statistical concepts, R code, data management, and workflow strategies. Come to lab with your laptop ready to work!
+
+### Final exam
+
+The final is officially scheduled for Saturday, December 14, from 7-10PM. This is an awful time so I'm pretty sure you will want to change it. If you do want to change it, please coordinate amongst yourselves to find a time and a room that works for ***everyone*** and then let me know. 
+
+# Attendance Policy
+
+When learning a new skill, there is no substitute for time on task. Attendance at both lecture and lab is therefore a course requirement. If you miss more than one lecture or lab session, your highest possible grade will be A-; if you miss more than two lectures or labs, your highest possible grade will be a B+; etc. If you miss more than four lectures and labs combined, you will receive a failing grade for the course. If an emergency necessitates that you miss one lab or lecture session, please contact me (in advance, if possible) so we can arrange for you to make it up.
+
+# Grading
+
+Your raw score for this course will be calculated with daily work (homework, quizzes, DataCamp) as 60% of your grade and the final exam as 40% of your grade. The raw score will be converted to a letter grade based on conventional percentage cutoffs (e.g., 93%, 90%, 87%) then any attendance adjustments (see above) will be applied. The bottom line: come to lecture and lab, do a good job on the assignments, and perform well on the exam and you will do great. Start missing things or falling behind and you will not.
+
+# Materials
+
+You will need to purchase the textbook and install R and RStudio on your computer. You will also be using DataCamp as directed. You might also find the following resources useful:
+
+- [R for Data Science](https://r4ds.had.co.nz/)
+- [ModernDive](https://moderndive.com/)
+- [Data Visualization: A Practical Introduction](http://socviz.co/)
+
+# Topic Schedule
+
+We will follow the schedule below as closely as possible. Under "Exercises" you will see a word that refers to the name of the exercise. You can find these exercises in the Exercises folder under Resources on Sakai.
+
+LEC. DATE | TOPIC | READING | LAB | EXERCISES |
+--- | --- | --- | --- | --- |
+8/27 | Causality: Experimental studies | 1 - 2.4 | [R](https://cran.rstudio.com/) and [RStudio](https://www.rstudio.com/products/rstudio/download/) | bias, population
+9/3  | Causality: Observational studies | 2.5 - 2.7 | tidyverse | criminal, music, small, exclusionary 
+9/10 | Measurement | 3 | Data viz with ggplot | empathy, migration, partner, poverty
+9/17 | Prediction | 4.1 - 4.2 | Vectorizing and loops | fox, ideology, election, betting
+9/24 | Prediction | 4.3 | Linear regression practice | immigration, race, betting-lm
+10/1 | Probability | 6.1 - 6.3 | Probability and simulations | enigma, intrade
+10/8 | FALL BREAK | none | none  | none 
+10/15 | Probability | 6.4 - 6.5 | Monte Carlo simulations | fraud, race
+10/22 | Estimation | 7.1 | TBD | (begin next week's)  
+10/29 | Hypothesis testing | 7.2 | TBD | file, listexp, election
+11/5  | Linear regression with uncertainty | 7.3 | TBD | moving, democracy, windpower  
+11/12 | More on linear regression | TBD | TBD | criminal, new
+11/19 | Discovery (text) | 5.1 | TBD | constitutions
+11/26 | Discovery (networks) | 5.2 | TBD | supreme, trade
+
+
+
+
