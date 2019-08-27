@@ -1,0 +1,52 @@
+Introduction and Causality
+========================================================
+author: Stephen Vaisey
+date: Fall 2019
+autosize: true
+
+Goals of the course
+========================================================
+By the end of the course, you should know how to:
+
+1. Import and manage data in R
+2. Perform basic descriptive analysis
+3. Create simple univariate and bivariate visualizations
+4. Estimate and interpret basic regression models
+5. Quantify the uncertainty of your conclusions
+6. Make informed judgments about (simple) competing models
+7. Create reproducible reports using R Markdown
+
+About R
+========================================================
+- base R vs. tidyverse
+- for tidyverse code, see link in Sakai
+- you will learn tidyverse via DataCamp (custom track)
+- for visualization basics, see <http://socviz.co>
+
+
+Things to be aware of
+========================================================
+- R and RStudio
+- R Markdown
+- Slack
+- DataCamp
+
+A typical week
+========================================================
+
+**Monday**: skim/read chapter; start DataCamp
+
+**Tuesday**: lecture (possible quiz)
+
+**Wednesday**: reread chapter; go through chapter code
+
+**Thursday**: ask questions in lab, practice coding
+
+**Friday-Sunday**: complete exercises, submit via Sakai
+
+Questions?
+========================================================
+
+**Causality: The Potential Outcomes Framework**
+========================================================
+
