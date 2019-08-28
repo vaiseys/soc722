@@ -1,0 +1,85 @@
+---
+title: "Causality"
+author: "Stephen Vaisey"
+date: "Fall 2019"
+output:
+  ioslides_presentation: 
+    incremental: no
+    transition: .01
+    widescreen: yes
+---
+
+<style>
+.center {
+ text-align: center
+}
+</style>
+
+```{r setup, echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', message = FALSE)
+library(tidyverse)
+
+```
+
+# Course business
+
+## Review: A typical week
+
+**Monday**: skim/read chapter; start DataCamp
+
+**Tuesday**: lecture (possible quiz)
+
+**Wednesday**: reread chapter; go through chapter code
+
+**Thursday**: ask questions in lab, practice coding
+
+**Friday-Sunday**: complete exercises, submit via Sakai
+
+
+## Homework debrief
+
+
+## Ask me **two questions** about the concepts
+
+
+## Agenda for today
+
+1. Review: why do experiments work
+
+2. Review of descriptive statistics
+
+3. Introduction to observational data
+
+4. Simple approaches to causal inference with observational data
+
+
+## Questions?
+
+
+# 1. Review
+
+## Why do experiments work? (Discuss)
+
+# 2. Descriptive statistics
+
+## Descriptive stats you need to know
+- Mean
+- Median
+- Mode
+- Quantiles (e.g., 25th, 75th)
+- Interquartile range
+- Standard deviation
+- Variance
+
+## Mean
+
+- The **mean** is the sum of the observations divided by the number of observations
+- Generally called the average
+- "Center of gravity" of the distribution
+
+---
+```{r}
+knitr::include_graphics("balance.PNG")
+# http://www.texample.net/tikz/examples/balance/
+
+```
