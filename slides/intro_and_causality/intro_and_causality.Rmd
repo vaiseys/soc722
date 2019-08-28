@@ -16,8 +16,10 @@ output:
 </style>
 
 ```{r setup, echo=FALSE, message=FALSE}
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', message = FALSE)
+knitr::opts_chunk$set(echo = FALSE, 
+                      fig.align = 'center', message = FALSE)
 library(tidyverse)
+library(here)
 
 ```
 
@@ -80,7 +82,7 @@ By the end of the course, you should know how to:
 
 ## Threats to causal inference
 ```{r, out.width="50%"}
-knitr::include_graphics("confounding.JPG")
+knitr::include_graphics(here("images", "confounding.JPG"))
 
 ```
 
@@ -102,7 +104,7 @@ How do we *identify* the effect of a treatment (cause) on an outcome?
 ## Results
 
 ```{r, out.width="80%"}
-knitr::include_graphics("correll.png")
+knitr::include_graphics(here("images", "correll.png"))
 
 ```
 
@@ -304,18 +306,18 @@ beyond a particular study.
 
 ## Example: trolley problem
 ```{r}
-knitr::include_graphics("trolley.jpg")
+knitr::include_graphics(here("images", "trolley.jpg"))
 ```
 
 ##
 ```{r}
-knitr::include_graphics("trolley-results.jpg")
+knitr::include_graphics(here("images", "trolley-results.jpg"))
 
 ```
 
 ##
 ```{r, out.width="80%"}
-knitr::include_graphics("weisshaar1.jpg")
+knitr::include_graphics(here("images", "weisshaar1.jpg"))
 
 ```
 
@@ -330,7 +332,7 @@ Market Re-entry after Family-Related Employment Lapses."
 
 ##
 ```{r, out.width="80%"}
-knitr::include_graphics("weisshaar2.jpg")
+knitr::include_graphics(here("images", "weisshaar2.jpg"))
 
 ```
 

@@ -18,6 +18,7 @@ output:
 ```{r setup, echo=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', message = FALSE)
 library(tidyverse)
+library(here)
 
 ```
 
@@ -83,3 +84,21 @@ knitr::include_graphics("balance.PNG")
 # http://www.texample.net/tikz/examples/balance/
 
 ```
+
+## Median
+
+- The middle observation in an ordered set (if $n$ is an odd number) or the mean of the two middle observations in an ordered set (if $n$ is an even number.)
+- Insensitive to outliers
+
+---
+```{r}
+knitr::include_graphics()
+```
+
+
+---
+```{r}
+gss <- haven::read_dta(here("data", "GSS2018.dta"))
+
+```
+
