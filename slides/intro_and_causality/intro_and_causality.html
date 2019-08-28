@@ -3081,18 +3081,18 @@ if (document.readyState !== "loading" &&
     }
 
     slides > slide {
-      -webkit-transition: all 0.2s ease-in-out;
-      -moz-transition: all 0.2s ease-in-out;
-      -o-transition: all 0.2s ease-in-out;
-      transition: all 0.2s ease-in-out;
+      -webkit-transition: all 0.1s ease-in-out;
+      -moz-transition: all 0.1s ease-in-out;
+      -o-transition: all 0.1s ease-in-out;
+      transition: all 0.1s ease-in-out;
     }
 
     .auto-fadein {
       -webkit-transition: opacity 0.6s ease-in;
-      -webkit-transition-delay: 0.2s;
-      -moz-transition: opacity 0.6s ease-in 0.2s;
-      -o-transition: opacity 0.6s ease-in 0.2s;
-      transition: opacity 0.6s ease-in 0.2s;
+      -webkit-transition-delay: 0.1s;
+      -moz-transition: opacity 0.6s ease-in 0.1s;
+      -o-transition: opacity 0.6s ease-in 0.1s;
+      transition: opacity 0.6s ease-in 0.1s;
       opacity: 0;
     }
 /* https://github.com/ropensci/plotly/pull/524#issuecomment-468142578 */
@@ -3125,11 +3125,13 @@ slide:not(.current) .plotly.html-widget{
 }
 </style>
 
-<slide class=""><hgroup><h2>Goals of the course</h2></hgroup><article  id="goals-of-the-course">
+<slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Course business</h2></hgroup><article  id="course-business">
+
+</article></slide><slide class=""><hgroup><h2>Goals of the course</h2></hgroup><article  id="goals-of-the-course">
 
 <p>By the end of the course, you should know how to:</p>
 
-<ol class = 'build'>
+<ol>
 <li>Import and manage data in R</li>
 <li>Perform basic descriptive analysis</li>
 <li>Create simple univariate and bivariate visualizations</li>
@@ -3141,7 +3143,7 @@ slide:not(.current) .plotly.html-widget{
 
 </article></slide><slide class=""><hgroup><h2>About R</h2></hgroup><article  id="about-r">
 
-<ul class = 'build'>
+<ul>
 <li>base R vs. tidyverse</li>
 <li>for tidyverse code, see link in Sakai</li>
 <li>you will learn tidyverse via DataCamp (custom track)</li>
@@ -3150,7 +3152,7 @@ slide:not(.current) .plotly.html-widget{
 
 </article></slide><slide class=""><hgroup><h2>Things to be aware of</h2></hgroup><article  id="things-to-be-aware-of">
 
-<ul class = 'build'>
+<ul>
 <li>R and RStudio</li>
 <li>R Markdown</li>
 <li>Slack</li>
@@ -3171,11 +3173,11 @@ slide:not(.current) .plotly.html-widget{
 
 </article></slide><slide class=""><hgroup><h2>Questions?</h2></hgroup><article  id="questions">
 
-</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Causality and potential outcomes</h2></hgroup><article  id="causality-and-potential-outcomes">
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Causes and potential outcomes</h2></hgroup><article  class="smaller" id="causes-and-potential-outcomes">
 
 </article></slide><slide class=""><hgroup><h2>Asking causal questions</h2></hgroup><article  id="asking-causal-questions">
 
-<ul class = 'build'>
+<ul>
 <li>Does more education <em>cause</em> higher wages?</li>
 <li>Does participating in a job training program <em>cause</em> a higher probability of employment?</li>
 <li>Do boycotts <em>cause</em> a drop in a company’s share price?</li>
@@ -3192,18 +3194,18 @@ slide:not(.current) .plotly.html-widget{
 
 </article></slide><slide class=""><hgroup><h2>Experiments and the &ldquo;independent variable&rdquo;</h2></hgroup><article  id="experiments-and-the-independent-variable">
 
-<ul class = 'build'>
+<ul>
 <li>What is an experiment?</li>
 <li>How do experiments solve the problem we just talked about?</li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>Example: Audit study</h2></hgroup><article  id="example-audit-study">
 
-<ul class = 'build'>
+<ul>
 <li>Correll et al. sent fake resumes and cover letters to 300+ employers</li>
 <li>Treatment categories
 
-<ul class = 'build'>
+<ul>
 <li>Mother (PTA officer; relocating &ldquo;with family&rdquo;)</li>
 <li>Childless (alumni officer; relocating)</li>
 </ul></li>
@@ -3229,13 +3231,13 @@ They find a negative effect of motherhood on the probability of a call back
 
 </article></slide><slide class=""><hgroup><h2>Experiments can’t do everything</h2></hgroup><article  id="experiments-cant-do-everything">
 
-<ul class = 'build'>
+<ul>
 <li>ethics</li>
 <li>external validity</li>
 <li>often non-representative</li>
 <li>some treatments are hard or impossible to assign randomly
 
-<ul class = 'build'>
+<ul>
 <li>motherhood</li>
 <li>divorce</li>
 <li>boycotts</li>
@@ -3477,9 +3479,9 @@ They find a negative effect of motherhood on the probability of a call back
 
 <p>In a properly executed experiment, there is no association between the potential outcome variables and treatment assignment.</p>
 
-<p>\(E[Y^0 | T = 0] \approx E[Y^0]\)</p>
+<p>\(E[Y^0 | T = 0] \simeq E[Y^0]\)</p>
 
-<p>\(E[Y^1 | T = 1] \approx E[Y^1]\)</p>
+<p>\(E[Y^1 | T = 1] \simeq E[Y^1]\)</p>
 
 <p>So…</p>
 
@@ -3497,14 +3499,14 @@ They find a negative effect of motherhood on the probability of a call back
 
 </article></slide><slide class=""><hgroup><h2>Randomization</h2></hgroup><article  id="randomization">
 
-<ul class = 'build'>
+<ul>
 <li><p>Experiments identify the SATE because cases are randomly assigned to the treatment and control group and are, therefore, identical <strong>on average</strong>, on all pre-treatment characteristics.</p></li>
 <li><p>Experiments are sometimes called <strong>randomized controlled trials</strong> (or RCTs)</p></li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>Internal and external validity</h2></hgroup><article  id="internal-and-external-validity">
 
-<ul class = 'build'>
+<ul>
 <li><p><strong>Internal validity</strong>: the extent to which causal assumptions are satisfied in the study</p></li>
 <li><p><strong>External validity</strong>: the extent to which the conclusions can be generalized beyond a particular study.</p></li>
 </ul>

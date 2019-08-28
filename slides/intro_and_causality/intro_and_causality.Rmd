@@ -4,8 +4,8 @@ author: "Stephen Vaisey"
 date: "Fall 2019"
 output:
   ioslides_presentation: 
-    incremental: yes
-    transition: faster
+    incremental: no
+    transition: 0.1
     widescreen: yes
 ---
 
@@ -21,6 +21,7 @@ library(tidyverse)
 
 ```
 
+# Course business
 
 ## Goals of the course
 
@@ -33,6 +34,7 @@ By the end of the course, you should know how to:
 5. Quantify the uncertainty of your conclusions
 6. Make informed judgments about (simple) competing models
 7. Create reproducible reports using R Markdown
+
 
 ## About R
 
@@ -49,6 +51,7 @@ By the end of the course, you should know how to:
 - Slack
 - DataCamp
 
+
 ## A typical week
 
 **Monday**: skim/read chapter; start DataCamp
@@ -61,9 +64,12 @@ By the end of the course, you should know how to:
 
 **Friday-Sunday**: complete exercises, submit via Sakai
 
+
 ## Questions?
 
-# Causality and potential outcomes
+
+# Causes and potential outcomes {.smaller}
+
 
 ## Asking causal questions
 
@@ -255,9 +261,9 @@ $E[Y^1 | T = 0] = E[Y^1 | T = 1 ]$
 In a properly executed experiment, there is no association between the potential 
 outcome variables and treatment assignment.
 
-$E[Y^0 | T = 0] \approx E[Y^0]$
+$E[Y^0 | T = 0] \simeq E[Y^0]$
 
-$E[Y^1 | T = 1] \approx E[Y^1]$
+$E[Y^1 | T = 1] \simeq E[Y^1]$
 
 So...
 
