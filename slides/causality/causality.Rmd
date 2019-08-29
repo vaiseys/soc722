@@ -16,7 +16,8 @@ output:
 </style>
 
 ```{r setup, echo=FALSE, message=FALSE}
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', message = FALSE)
+knitr::opts_chunk$set(echo = FALSE, 
+                      fig.align = 'center', message = FALSE)
 library(tidyverse)
 library(here)
 
@@ -78,10 +79,10 @@ library(here)
 - Generally called the average
 - "Center of gravity" of the distribution
 
----
+##
 ```{r}
-knitr::include_graphics("balance.PNG")
-# http://www.texample.net/tikz/examples/balance/
+knitr::include_graphics(here("images", "balance.PNG"))
+
 
 ```
 
@@ -90,15 +91,30 @@ knitr::include_graphics("balance.PNG")
 - The middle observation in an ordered set (if $n$ is an odd number) or the mean of the two middle observations in an ordered set (if $n$ is an even number.)
 - Insensitive to outliers
 
----
-```{r}
-knitr::include_graphics()
-```
-
-
----
-```{r}
-gss <- haven::read_dta(here("data", "GSS2018.dta"))
+##
+```{r, out.width="80%"}
+knitr::include_graphics(here("images", "meme.jpg"))
 
 ```
 
+
+## {.smaller}
+```{r}
+gss <- haven::read_dta(here("data", "GSS2018.dta")) %>%
+  haven::zap_labels()          # remove labels from values
+
+```
+
+### 2018 GSS ideal \# of children: what's the median?
+
+```{r, echo = TRUE}
+gss %>% select(chldidel) %>%   # keep the variable you need
+  filter(chldidel < 8 ) %>%    # get rid of invalid responses
+  group_by(chldidel) %>%       # each answer is own "group"
+  add_count(chldidel) %>%      # add count of each response
+  slice(1) %>%                 # keep one "rep" from each group
+  ungroup() %>%                # forget grouping for mutate
+  mutate(prop = n/sum(n) ,     # create proportion column
+         cprop = cumsum(prop)) # create cumulative column
+
+```
