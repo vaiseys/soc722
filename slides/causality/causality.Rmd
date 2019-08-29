@@ -1,5 +1,6 @@
 ---
 title: "Causality"
+subtitle: and introduction to descriptive statistics
 author: "Stephen Vaisey"
 date: "Fall 2019"
 output:
@@ -79,6 +80,8 @@ library(here)
 - Generally called the average
 - "Center of gravity" of the distribution
 
+$$ \bar{y} = \frac{1}{n}\sum^n_{i=1}y_i $$
+
 ##
 ```{r}
 knitr::include_graphics(here("images", "balance.PNG"))
@@ -105,7 +108,7 @@ gss <- haven::read_dta(here("data", "GSS2018.dta")) %>%
 
 ```
 
-### 2018 GSS ideal \# of children: what's the median?
+### 2018 GSS ideal \# of children: what's the **median**?
 
 ```{r, echo = TRUE}
 gss %>% select(chldidel) %>%   # keep the variable you need
@@ -118,3 +121,285 @@ gss %>% select(chldidel) %>%   # keep the variable you need
          cprop = cumsum(prop)) # create cumulative column
 
 ```
+
+## {.smaller}
+
+### 2018 GSS ideal \# of children: what's the **mode**?
+
+- The most common value in the dataset
+- Only makes sense if the variable is discrete rather than continuous
+
+```{r}
+gss %>% select(chldidel) %>%   # keep the variable you need
+  filter(chldidel < 8 ) %>%    # get rid of invalid responses
+  group_by(chldidel) %>%       # each answer is own "group"
+  add_count(chldidel) %>%      # add count of each response
+  slice(1) %>%                 # keep one "rep" from each group
+  ungroup() %>%                # forget grouping for mutate
+  mutate(prop = n/sum(n) ,     # create proportion column
+         cprop = cumsum(prop)) # create cumulative column
+
+```
+
+##
+
+```{r, out.width="30%"}
+knitr::include_graphics(here("images", "mmm.jpg"))
+```
+
+## Quartiles
+
+- Lower quartile = 25th percentile
+- Median = 50th percentile
+- Upper quartile = 75th percentile
+
+```{r echo = TRUE}
+gss %>% 
+  select(chldidel) %>%
+  filter(chldidel<8) %>% 
+  summary()
+
+```
+
+
+## Interquartile range
+
+- Measure of *dispersion* or spread of the data
+- Upper quartile $-$ lower quartile
+
+```{r}
+gss %>% 
+  select(chldidel) %>%
+  filter(chldidel<8) %>% 
+  summary()
+
+```
+
+## Standard deviation
+
+- Another measure of dispersion
+- The average deviation from the mean
+
+$$ SD = \sqrt{\frac{1}{n-1}\sum^n_{i=1}(y_i-\bar{y})^2} $$
+
+## Variance
+
+- The square of the standard deviation
+- The sum of squared deviations from the mean divided by $n-1$
+- We usually divide by $n-1$ (rather than $n$) because it reduces bias in finite samples
+
+$$ V = \frac{1}{n-1}\sum^n_{i=1}(y_i-\bar{y})^2 $$
+
+## 
+
+```{r}
+fakedata <- tibble(
+  norm1 = rnorm(10000, 100, 15) ,
+  norm2 = rnorm(10000, 100, 5)
+)
+
+ggplot(fakedata) +
+  geom_line(aes(x = norm1), stat = "density") +
+  geom_line(aes(x = norm2), stat = "density") +
+  theme_minimal() +
+  labs( x = "x" , y = "")
+
+```
+<div class = center> Groups with same means, different SDs </div>
+
+# 3. Observational data
+
+## Why do we use observational data?
+
+- We can't usually randomize treatment (e.g., divorce, education)
+- Observational means the treatment is assigned by some other process than researcher selection (e.g., subject choice)
+
+$~$
+
+- The **external validity** is often better (generalization)
+- The **internal validity** is worse
+  - Pre-treatment differences
+  - Confounding bias
+  - Selection bias
+  - Statistical control is needed
+  - Unobserved counfounding is a major threat
+  
+## Example datasets in Sociology
+
+- General Social Survey (GSS)
+- Add Health
+- Panel Study of Income Dynamics (PSID)
+- National Study of Youth and Religion (NSYR)
+- World Values Survey
+- International Social Survey Programme (ISSP)
+- European Social Survey (ESS)
+
+# 4. Using observational data
+
+## This is what we'd like
+
+$$ \text{SATE} = \frac{1}{n}\sum_{i=1}^{n}(y^1_i - y^0_i) $$
+
+Recall that because we can't observe both potential outcomes for each case, we can't calculate this directly.
+
+## In an experiment it's easier
+### The difference-in-means estimator
+
+$$ \frac{1}{n_T}\sum^{n_T}_{i=1}T_iY_i - \frac{1}{n_C}\sum^{n_C}_{i=1}(1-T_i)Y_i  $$
+
+## Confounding
+
+```{r}
+knitr::include_graphics(here("images", "confounding.jpg"))
+```
+
+- Key assumption of experiments is **unconfoundedness**
+- For observational data, how do we find a good comparison group?
+
+## Example {.smaller}
+### Admissions to 6 different Berkeley graduate programs in 1973
+
+```{r echo = TRUE}
+data("admissions", package = "dslabs")
+admissions %>% 
+  rename( admit_pct = admitted ) %>%                   # misleading var name
+  group_by( gender ) %>% 
+  summarize( rate = weighted.mean( admit_pct , applicants ) )
+
+```
+
+**Why do we have to be more careful interpreting this difference than in an audit study?**
+
+## Statistical control by subclassification
+### Question: is there gender discrimination in admissions?
+### What if we look separately by program?
+
+##
+
+<div class = "columns-2">
+
+```{r}
+admissions
+
+```
+
+- Women applied to more selective programs
+- When we compare *within programs*, we are closer to the true effect of gender
+- Why might this still not be enough control for confounding?
+
+</div>
+
+## {.larger}
+
+```{r echo = TRUE}
+admissions %>% 
+  rename( admit_pct = admitted ) %>% 
+  mutate( diff = admit_pct - lag(admit_pct , n = 6 ) ,
+          totapps = applicants + lag(applicants, n = 6) ) %>%
+  filter( gender == "women" ) %>% 
+  summarize( gender_diff = weighted.mean( diff , totapps ) )
+
+```
+
+Assuming our statistical control was successful, this 4 percentage-point advantage for female students would be our estimate of the **Sample Average Treatment Effect** (SATE).
+
+## Book covers three main strategies for causal inference
+
+1. Cross-sectional comparison (incl. subclassification)
+
+2. Before-and-after design
+
+3. Difference-in-differences
+
+
+## Card and Krueger example
+
+```{r}
+knitr::include_graphics(here("images", "did.jpg"))
+# HT: Imai slides
+
+```
+
+## Example: Basque terrorism
+
+- Basque region hit with terrorism in early 1970s
+  - From 1973 to late 1990s, ETA killed almost 800 people
+  - Goal: independent Basque state
+  - Financing: kidnappings, extortion, robberies
+  - Activity localized to Basque area
+- Question: what is the economic impact of terrorism?
+  - Basque was 3rd richest region in Spain at onset
+  - Dropped to 6th position by late 1990s
+- Counterfactually speaking: How would Basque economy have fared in the absence of terrorism?
+
+##
+
+```{r}
+knitr::include_graphics(here("images", "spain.jpg"))
+
+```
+
+## Applying the three identification strategies
+
+Basque region experiences terrorism (*treatment*)
+
+Other Spanish regions did not (*control*)
+
+$~$
+
+Three ideas:
+
+1. Cross-section comparison: compare Basque and others after 1973
+
+2. Before and after: compare Basque before and after 1972
+
+3. Difference-in-differences: compare others before and after 1973 and subtract the difference from Basque difference
+
+What does each strategy assume?
+
+## {.smaller}
+
+```{r echo = TRUE}
+bd <- read_csv(here("data", "basque.csv"))
+glimpse(bd)
+skimr::skim_with(numeric = list(hist = NULL)) # only for slides
+skimr::skim(bd)
+
+```
+
+## {.smaller}
+
+```{r echo = TRUE}
+bd <- bd %>% 
+  mutate( basque = ifelse( region == "Basque Country" , 1 , 0 ) ,
+          after = ifelse( year >= 1973 , 1 , 0 ))
+
+means <- bd %>% 
+  group_by( basque , after ) %>% 
+  summarize( gdpcap = mean( gdpcap ))
+
+means
+
+```
+
+## {.smaller}
+
+<div class = columns-2>
+
+```{r echo = TRUE}
+means
+
+# Cross-section
+means[4,3] - means[2,3]
+
+# Before and after
+means[4,3] - means[3,3]
+
+# Difference in difference
+(means[4,3] - means[3,3]) - 
+  (means[2,3] - means[1,3])
+
+
+```
+
+</div>
