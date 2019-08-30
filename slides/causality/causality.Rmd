@@ -256,7 +256,7 @@ knitr::include_graphics(here("images", "confounding.jpg"))
 - Key assumption of experiments is **unconfoundedness**
 - For observational data, how do we find a good comparison group?
 
-## Example {.smaller}
+## Example
 ### Admissions to 6 different Berkeley graduate programs in 1973
 
 ```{r echo = TRUE}
@@ -403,3 +403,38 @@ means[4,3] - means[3,3]
 ```
 
 </div>
+
+##
+
+```{r out.width="90%"}
+bd %>% group_by(basque, year) %>%
+  summarize(gdp = mean(gdpcap)) %>% 
+  ggplot(., aes(x = year, y = gdp , color = factor(basque) )) +
+  geom_line() +
+  theme_minimal() +
+  geom_vline( xintercept = 1973 , linetype = "dotted" ) + 
+  labs( x = "Year" ,
+        y = "GDP (Euros) per capita" ,
+        color = "Basque" )
+  
+```
+
+## Different strategies, different assumptions
+- All the strategies are attempts at finding a good **counterfactual** comparison
+- Ideally, we want to compare "treated" cases that are alike in every way *except* for the treatment
+- Difference-in-difference (and related) approaches require repeated measurements *over time*, which we don't always have
+- In practice, we're often doing statistical control by subclassification (or related "control" strategies)
+
+## What would we good comparions?
+>- Effect of a college degree on earnings
+>- Effect of universal health care on average life expectancy in a country
+>- Effect of weekly church attendance on conservatism
+>- Effect of having a friend who exercises on a person's own exercise
+>- Effect of incarceration on depression
+
+##
+```{r out.width="80%"}
+knitr::include_graphics(here("images", "statclass.png"))
+
+```
+
