@@ -371,8 +371,8 @@ skimr::skim(bd)
 
 ```{r echo = TRUE}
 bd <- bd %>% 
-  mutate( basque = ifelse( region == "Basque Country" , 1 , 0 ) ,
-          after = ifelse( year >= 1973 , 1 , 0 ))
+  mutate( basque = if_else( region == "Basque Country" , 1L , 0L ) ,
+          after = if_else( year >= 1973 , 1L , 0L ))
 
 means <- bd %>% 
   group_by( basque , after ) %>% 
@@ -425,7 +425,7 @@ bd %>% group_by(basque, year) %>%
 - Difference-in-difference (and related) approaches require repeated measurements *over time*, which we don't always have
 - In practice, we're often doing statistical control by subclassification (or related "control" strategies)
 
-## What would we good comparions?
+## What would be good comparions?
 >- Effect of a college degree on earnings
 >- Effect of universal health care on average life expectancy in a country
 >- Effect of weekly church attendance on conservatism
