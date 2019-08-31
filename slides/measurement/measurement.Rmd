@@ -27,7 +27,7 @@ Ask me two questions about the concepts
 4. Measuring "class"
 
 ---
-class: center, middle
+class: center, middle, inverse
 
 # 1. Surveys and sampling
 
@@ -113,3 +113,36 @@ class:smaller
                                     
 ---
 
+# An intuitive take on random sampling
+
+http://students.brown.edu/seeing-theory/basic-probability/index.html
+
+---
+
+# Difficulty of drawing a random sample
+
+Problems of telephone survey
+- Random digit dialing from phone book
+- Cell phones (double counting for richer participants)
+- Caller ID screening (unit non-response)
+
+An alternative: Internet survey
+- Opt-in panels, respondent driven sampling   
+- non-probability sampling
+- Cheap but non-representative
+- Digital divide: rich vs. poor, young vs. old
+- Correct for potential sampling bias via statistical methods
+
+---
+
+# Sampling in real life
+
+http://gss.norc.org/DOCUMENTS/CODEBOOK/A.pdf
+
+---
+class: center, middle, inverse
+
+# 2. Visualizing a single variable
+
+
+---
