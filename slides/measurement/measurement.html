@@ -4,8 +4,7 @@
     <title>Measurement</title>
     <meta charset="utf-8" />
     <meta name="author" content="Stephen Vaisey" />
-    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -15,14 +14,20 @@ class: center, middle, inverse, title-slide
 ## Sociology 722
 ### Stephen Vaisey
 ### Duke University
-### 2019/08/30 (updated: 2019-08-31)
+### 2019/08/30 (updated: 2019-09-01)
 
 ---
+
+
+
+
+
 
 
 # Homework debrief
 
 Ask me two questions about the concepts
+
 
 ---
 
@@ -33,6 +38,7 @@ Ask me two questions about the concepts
 3. Visualizing bivariate data
 4. Measuring "class"
 
+
 ---
 class: center, middle, inverse
 
@@ -42,14 +48,18 @@ class: center, middle, inverse
 
 # Literary Digest poll, 1936
 
+.pull-left[
+
 - Source: auto registrations, phone books
 - 10 million straw poll ballots sent out
 - 2.3 million returned
 - Gallup used 50,000 respondents
 
-.center[
+]
 
-&lt;img src="/images/litdigest.jpg" width="30%" /&gt;
+.pull-right[
+
+&lt;img src="/images/litdigest.jpg" width="60%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -58,6 +68,8 @@ class: center, middle, inverse
 
 `\(~\)`
 
+.large[
+
 Source                     |  FDR vote share  |
 :--------------------------|-----------------:|
 Literary Digest            |              43
@@ -65,15 +77,20 @@ George Gallup              |              56
 Gallup's prediction of LD  |              44
 *Actual outcome*           |              62
 
+]
+
 ---
+
 # 1948 Election
 
-&lt;img src="/images/truman.jpg" width="100%" /&gt;
+&lt;img src="/images/truman.jpg" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 # The polling disaster
 
 `\(~\)`
+
+.large[
 
 Source           | Truman| Dewey|Thurmond | Wallace
 :----------------|------:|-----:|--------:|--------:|
@@ -82,41 +99,48 @@ Gallup           |  44   |  50  |     2   |     4
 Roper            |  38   |  53  |     5   |     4
 *Actual Outcome* |  50   |  45  |     3   |     2
 
+]
+
 ---
+
 # Quota sampling
 
 - fixed quote of certain respondents for each interviewer
 - sample resembles the population on these characteristics
 - potential unobserved confounding `\(\rightarrow\)` selection bias
 
+
+
 ---
 
 # Probability sampling
+
 - Ensures representativeness
 - *Definition:* every unit in the population has a **known** non-zero probability of being selected
 - *Simple random sampling:* every unit has an **equal** selection probability
 
+
 ---
-class:smaller
 
 # Sources of Bias
  
- Population                         |     Sample              |      Potential Bias   |
-:----------------------------------:|:-----------------------:|:---------------------:|
-  Target population                 |                         |
-  `\(\downarrow\)`                      |                         |    Frame bias
-  Frame population `\(\rightarrow\)`    |   Sample                |    *Sampling bias*
-                                    |   `\(\downarrow\)`          |    Unit non-response
-                                    |   Respondents           |
-                                    |   `\(\downarrow\)`          |    Item non-response
-                                    |   Completed items       |   
-                                    |                         |    Response bias
+ Population                       |     Sample         |      Potential Bias   |
+:--------------------------------:|:------------------:|:---------------------:|
+  Target population               |                    |
+  `\(\downarrow\)`                    |                    |    Frame bias
+  Frame population `\(\rightarrow\)`  |   Sample           |    *Sampling bias*
+                                  |   `\(\downarrow\)`     |    Unit non-response
+                                  |   Respondents      |
+                                  |   `\(\downarrow\)`     |    Item non-response
+                                  |   Completed items  |   
+                                  |                    |    Response bias
                                     
 ---
 
 # An intuitive take on random sampling
 
-http://students.brown.edu/seeing-theory/basic-probability/index.html
+[Seeing Theory website](http://students.brown.edu/seeing-theory/basic-probability/index.html)
+
 
 ---
 
@@ -126,6 +150,8 @@ Problems of telephone survey
 - Random digit dialing from phone book
 - Cell phones (double counting for richer participants)
 - Caller ID screening (unit non-response)
+
+--
 
 An alternative: Internet survey
 - Opt-in panels, respondent driven sampling   
@@ -140,17 +166,51 @@ An alternative: Internet survey
 
 http://gss.norc.org/DOCUMENTS/CODEBOOK/A.pdf
 
+
 ---
 class: center, middle, inverse
 
 # 2. Visualizing a single variable
 
+---
+
+# Bring in the data
+
+
+```r
+# bring in Stata dataset and remove labels
+
+gss &lt;- haven::read_dta(here("data", "GSS2018.dta")) %&gt;% 
+  haven::zap_labels()
+
+
+# keep the variables I want and remove missing data
+
+gss &lt;- 
+  gss %&gt;% 
+  select(wrkstat, sex, educ, age, conrinc, prestg10) %&gt;% 
+  drop_na()
+```
 
 ---
+
+# Distribution of age
+
+
+```r
+p &lt;- ggplot(gss, aes( x = age )) +
+  geom_bar() +
+  theme_minimal()
+```
+
+---
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
+"ratio": "16:9",
 "highlightStyle": "github",
 "highlightLines": true,
 "countIncrementalSlides": false

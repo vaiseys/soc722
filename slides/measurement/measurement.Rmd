@@ -7,15 +7,35 @@ date: "2019/08/30 (updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
     lib_dir: libs
+    css: xaringan-themer.css
     nature:
+      ratio: '16:9'
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
 ---
 
+```{r message = FALSE, echo = FALSE}
+library(here)
+library(tidyverse)
+
+```
+
+```{r xaringan-themer, include = FALSE}
+library(xaringanthemer)
+mono_light(
+  base_color = "#012169" ,
+  text_font_size = "30px" ,
+  code_font_size = ".9em" ,
+  code_font_family = "Input")
+
+```
+
+
 # Homework debrief
 
 Ask me two questions about the concepts
+
 
 ---
 
@@ -26,6 +46,7 @@ Ask me two questions about the concepts
 3. Visualizing bivariate data
 4. Measuring "class"
 
+
 ---
 class: center, middle, inverse
 
@@ -35,14 +56,18 @@ class: center, middle, inverse
 
 # Literary Digest poll, 1936
 
+.pull-left[
+
 - Source: auto registrations, phone books
 - 10 million straw poll ballots sent out
 - 2.3 million returned
 - Gallup used 50,000 respondents
 
-.center[
+]
 
-```{r echo = FALSE, out.width="30%"}
+.pull-right[
+
+```{r echo = FALSE, fig.align='center', out.width="60%"}
 knitr::include_graphics("/images/litdigest.jpg")
 
 ```
@@ -54,6 +79,8 @@ knitr::include_graphics("/images/litdigest.jpg")
 
 $~$
 
+.large[
+
 Source                     |  FDR vote share  |
 :--------------------------|-----------------:|
 Literary Digest            |              43
@@ -61,10 +88,13 @@ George Gallup              |              56
 Gallup's prediction of LD  |              44
 *Actual outcome*           |              62
 
+]
+
 ---
+
 # 1948 Election
 
-```{r echo = FALSE, out.width="100%"}
+```{r echo = FALSE, fig.align='center', out.width='80%'}
 knitr::include_graphics("/images/truman.jpg")
 
 ```
@@ -74,6 +104,8 @@ knitr::include_graphics("/images/truman.jpg")
 
 $~$
 
+.large[
+
 Source           | Truman| Dewey|Thurmond | Wallace
 :----------------|------:|-----:|--------:|--------:|
 Crossley         |  45   |  50  |     2   |     3
@@ -81,41 +113,48 @@ Gallup           |  44   |  50  |     2   |     4
 Roper            |  38   |  53  |     5   |     4
 *Actual Outcome* |  50   |  45  |     3   |     2
 
+]
+
 ---
+
 # Quota sampling
 
 - fixed quote of certain respondents for each interviewer
 - sample resembles the population on these characteristics
 - potential unobserved confounding $\rightarrow$ selection bias
 
+
+
 ---
 
 # Probability sampling
+
 - Ensures representativeness
 - *Definition:* every unit in the population has a **known** non-zero probability of being selected
 - *Simple random sampling:* every unit has an **equal** selection probability
 
+
 ---
-class:smaller
 
 # Sources of Bias
  
- Population                         |     Sample              |      Potential Bias   |
-:----------------------------------:|:-----------------------:|:---------------------:|
-  Target population                 |                         |
-  $\downarrow$                      |                         |    Frame bias
-  Frame population $\rightarrow$    |   Sample                |    *Sampling bias*
-                                    |   $\downarrow$          |    Unit non-response
-                                    |   Respondents           |
-                                    |   $\downarrow$          |    Item non-response
-                                    |   Completed items       |   
-                                    |                         |    Response bias
+ Population                       |     Sample         |      Potential Bias   |
+:--------------------------------:|:------------------:|:---------------------:|
+  Target population               |                    |
+  $\downarrow$                    |                    |    Frame bias
+  Frame population $\rightarrow$  |   Sample           |    *Sampling bias*
+                                  |   $\downarrow$     |    Unit non-response
+                                  |   Respondents      |
+                                  |   $\downarrow$     |    Item non-response
+                                  |   Completed items  |   
+                                  |                    |    Response bias
                                     
 ---
 
 # An intuitive take on random sampling
 
-http://students.brown.edu/seeing-theory/basic-probability/index.html
+[Seeing Theory website](http://students.brown.edu/seeing-theory/basic-probability/index.html)
+
 
 ---
 
@@ -125,6 +164,8 @@ Problems of telephone survey
 - Random digit dialing from phone book
 - Cell phones (double counting for richer participants)
 - Caller ID screening (unit non-response)
+
+--
 
 An alternative: Internet survey
 - Opt-in panels, respondent driven sampling   
@@ -139,10 +180,47 @@ An alternative: Internet survey
 
 http://gss.norc.org/DOCUMENTS/CODEBOOK/A.pdf
 
+
 ---
 class: center, middle, inverse
 
 # 2. Visualizing a single variable
 
+---
+
+# Bring in the data
+
+```{r echo = TRUE}
+# bring in Stata dataset and remove labels
+
+gss <- haven::read_dta(here("data", "GSS2018.dta")) %>% 
+  haven::zap_labels()
+
+
+# keep the variables I want and remove missing data
+
+gss <- 
+  gss %>% 
+  select(wrkstat, sex, educ, age, conrinc, prestg10) %>% 
+  drop_na()
+
+```
 
 ---
+
+# Distribution of age
+
+```{r}
+p <- ggplot(gss, aes( x = age )) +
+  geom_bar() +
+  theme_minimal()
+
+```
+
+---
+
+```{r, echo = FALSE, fig.width=12, fig.height=7, fig.align='center'}
+p
+
+```
+
