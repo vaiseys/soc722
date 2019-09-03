@@ -25,7 +25,7 @@ library(tidyverse)
 ```{r xaringan-themer, include = FALSE}
 library(xaringanthemer)
 mono_light(
-  base_color = "#012169" ,
+  base_color = "#005587" ,
   white_color = "#FFFFFF" ,
   text_font_size = "30px" ,
   code_font_size = ".9em" ,
@@ -65,7 +65,7 @@ knitr::include_graphics("https://vaiseys.github.io/soc722/images/ffchallenge.png
 
 ---
 
-background-image: url(https://vaiseys.github.io/soc722/images/ffchallenge.png)
+background-image: url(https://vaiseys.github.io/soc722/images/ffchallenge-results.png)
 background-size: contain
 
 ---
@@ -83,7 +83,7 @@ background-size: contain
 ---
 class: center, middle, inverse
 
-1. Review of correlation
+# 1. Review of correlation
 
 ---
 
@@ -111,12 +111,36 @@ In other words, it's the average of the product of two variables' z-scores. It's
 
 ---
 
+# Visualizing different correlations
+
 ```{r}
-m <- matrix()
+
+mkdata <- function(n, r) {
+  result <- 
+    MASS::mvrnorm(n, 
+                  mu = c(0,0), 
+                  Sigma = matrix(c(1,r, r,1) , 
+                            nrow = 2 ,
+                            dimnames = list(c("y","x"))) ) %>% 
+    as_tibble() %>% 
+    mutate( corr = r )
+  return( result )
+}
+
+set.seed(0903)
+
+cdata <- bind_rows( mkdata( 1000 ,  0 ) ,
+                    mkdata( 1000 , .3 ) ,
+                    mkdata( 1000 , .6 ) ,
+                    mkdata( 1000 , .9 ))
+
+ggplot( cdata , aes( x = x, y = y )) +
+  geom_point( alpha = .3 ) +
+  facet_wrap( ~factor(corr) ) +
+  theme_minimal()
+
 
 ```
-
-
 
 
 ---
@@ -124,7 +148,6 @@ m <- matrix()
 # Warning! 
 
 ## Correlation only makes sense for continuous(ish) variables!
-
 
 ---
 
