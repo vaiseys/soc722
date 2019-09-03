@@ -581,7 +581,7 @@ gridExtra::grid.arrange(pp, pe, pi, nrow = 1)
 For example, [Weeden and Grusky (2005)](https://inequality.stanford.edu/sites/default/files/media/_media/pdf/key_issues/social%20class_research.pdf) argue for 126 classes!
 
 Various schemes have put the "true" number between 2 and 126 and some reject
-the notion of categorical class membership all together. Yet we talk a lot 
+the notion of categorical class membership altogether. Yet we talk a lot 
 about "class"!
 
 
