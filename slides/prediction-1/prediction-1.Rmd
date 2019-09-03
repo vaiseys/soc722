@@ -1,0 +1,142 @@
+---
+title: "Prediction (part 1)"
+subtitle: "Sociology 722"
+author: "Stephen Vaisey"
+institute: "Duke University"
+date: "2019/09/03 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, echo=FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, fig.align = 'center', fig.width = 8, fig.height = 5 , dev = 'svg')
+library(here)
+library(tidyverse)
+
+```
+
+```{r xaringan-themer, include = FALSE}
+library(xaringanthemer)
+mono_light(
+  base_color = "#012169" ,
+  white_color = "#FFFFFF" ,
+  text_font_size = "30px" ,
+  code_font_size = ".9em" ,
+  code_font_family = "Input" ,
+  header_color = "#C84E00" ,
+  text_slide_number_font_size = "0.6em" ,
+  code_highlight_color = "rgba(161,183,13,0.5)" ,
+  link_color = "#993399" )
+
+```
+
+
+# Homework debrief
+
+Ask me two questions about the concepts
+
+---
+
+# Prediction and explanation
+
+- Unlike political scientists who try to forecast elections, sociologists are 
+rarely trying to predict future events
+
+- The prediction we’re generally interested in is prediction of patterns 
+outside the sample (generalization)
+
+- Out-of-sample prediction is a stronger test of understanding than in-sample prediction
+
+---
+
+# Example: Fragile Families Challenge (2017)
+
+```{r}
+knitr::include_graphics("https://vaiseys.github.io/soc722/images/ffchallenge.png")
+
+```
+
+---
+
+background-image: url(https://vaiseys.github.io/soc722/images/ffchallenge.png)
+background-size: contain
+
+---
+
+# Today's agenda
+
+1. Review of correlation
+
+2. Linear regression model
+
+3. Regression to the mean
+
+4. Additional examples
+
+---
+class: center, middle, inverse
+
+1. Review of correlation
+
+---
+
+# Correlation (Pearson's _r_ )
+
+$~$
+
+$$r = \frac{1}{n-1}\sum^n_{i=1} \left( \frac{x_i-\bar{x}}{S_x}\times\frac{y_i-\bar{y}}{S_y} \right)$$
+
+$~$
+
+In other words, it's the average of the product of two variables' z-scores. It's a measure of how strongly two variables are associated.
+
+---
+
+# Correlation
+
+- On average, how do two variables move together
+
+- Positive (negative) correlation: When x is larger than its mean, y is likely (unlikely) to be larger than its mean
+
+- Positive (negative) correlation: data cloud slopes up (down)
+
+- High correlation: data cluster tightly around a line
+
+---
+
+```{r}
+m <- matrix()
+
+```
+
+
+
+
+---
+
+# Warning! 
+
+## Correlation only makes sense for continuous(ish) variables!
+
+
+---
+
+background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Anscombe.svg/1200px-Anscombe.svg.png)
+background-size: contain
+
+???
+
+This is Anscombe's quartet. The means, SDs, and correlations are all the same! That's why we visualize.
+
+---
+
+
+
+
