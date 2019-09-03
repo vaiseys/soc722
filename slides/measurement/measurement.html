@@ -14,7 +14,7 @@ class: center, middle, inverse, title-slide
 ## Sociology 722
 ### Stephen Vaisey
 ### Duke University
-### 2019/08/30 (updated: 2019-09-01)
+### 2019/08/30 (updated: 2019-09-02)
 
 ---
 
@@ -34,8 +34,11 @@ Ask me two questions about the concepts
 # Today's agenda
 
 1. Surveys and sampling
+
 2. Visualizing univariate data
+
 3. Visualizing bivariate data
+
 4. Measuring "class"
 
 
@@ -51,8 +54,11 @@ class: center, middle, inverse
 .pull-left[
 
 - Source: auto registrations, phone books
+
 - 10 million straw poll ballots sent out
+
 - 2.3 million returned
+
 - Gallup used 50,000 respondents
 
 ]
@@ -105,8 +111,10 @@ Roper            |  38   |  53  |     5   |     4
 
 # Quota sampling
 
-- fixed quote of certain respondents for each interviewer
+- fixed quota of certain respondents for each interviewer
+
 - sample resembles the population on these characteristics
+
 - potential unobserved confounding `\(\rightarrow\)` selection bias
 
 
@@ -116,13 +124,15 @@ Roper            |  38   |  53  |     5   |     4
 # Probability sampling
 
 - Ensures representativeness
-- *Definition:* every unit in the population has a **known** non-zero probability of being selected
-- *Simple random sampling:* every unit has an **equal** selection probability
+
+- **Definition:** every unit in the population has a *known* non-zero probability of being selected
+
+- **Simple random sampling:** every unit has an *equal* selection probability
 
 
 ---
 
-# Sources of Bias
+# Sources of bias
  
  Population                       |     Sample         |      Potential Bias   |
 :--------------------------------:|:------------------:|:---------------------:|
@@ -147,18 +157,18 @@ Roper            |  38   |  53  |     5   |     4
 # Difficulty of drawing a random sample
 
 Problems of telephone survey
-- Random digit dialing from phone book
-- Cell phones (double counting for richer participants)
-- Caller ID screening (unit non-response)
+- random digit dialing from phone book
+- cell phones (double counting for richer participants)
+- caller ID screening (unit non-response)
 
 --
 
 An alternative: Internet survey
-- Opt-in panels, respondent driven sampling   
+- opt-in panels, respondent driven sampling   
 - non-probability sampling
-- Cheap but non-representative
-- Digital divide: rich vs. poor, young vs. old
-- Correct for potential sampling bias via statistical methods
+- cheap but non-representative
+- digital divide: rich vs. poor, young vs. old
+- correct for potential sampling bias via statistical methods
 
 ---
 
@@ -205,7 +215,308 @@ p &lt;- ggplot(gss, aes( x = age )) +
 
 ---
 
-&lt;img src="measurement_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+# Histogram
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-5-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Coarsened histogram
+
+
+```r
+p &lt;- ggplot(gss, aes( x = age  )) +
+  geom_histogram( color = "white" ,
+                  breaks = seq(15, 90, 5)) +
+  theme_minimal()
+```
+
+---
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-7-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Density plot
+
+
+```r
+p &lt;- ggplot(gss, aes( x = age )) +
+  geom_line( stat = "density" ) +
+  theme_minimal()
+```
+
+---
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-9-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Using logarithms
+
+- often used for skewed variables (e.g., populations, incomes)
+
+- `\(y=\text{log}_b x\)`, where `\(b\)` is a base and `\(x\)` is a positive number
+
+- if `\(b\)` is 10, then
+
+--
+
+  - `\(\text{log}_{10}1000 = 3\)`
+
+--
+  
+  - `\(\text{log}_{10}.02 = -2\)`
+  
+--
+
+- we often will use base `\(e \approx 2.7182\)`, which has some particular advantages
+
+---
+
+.small[
+
+
+```r
+data(gapminder, package = "dslabs")
+gm2011 &lt;- gapminder %&gt;% 
+  filter( year == 2011 ) %&gt;% 
+  mutate( log10pop = log10( population ) ) %&gt;% 
+  drop_na()
+
+p1 &lt;- ggplot( gm2011 , aes( x = population ) ) +
+  geom_line( stat = "density" ) +
+  theme_minimal() +
+  labs( title = "Raw population" )
+
+p2 &lt;- ggplot( gm2011 , aes( x = log10pop ) ) +
+  geom_line( stat = "density" ) +
+  theme_minimal() +
+  labs( title = "log(10) population" )
+```
+]
+
+---
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-11-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Variables without natural units
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-12-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Calculating the z-score
+
+z-score of `\(x_i =\)` `$$\frac{x_i - \bar{x}}{S_x}$$`
+
+where `\(\bar{x}\)` is the mean of `\(x\)`
+
+where `\(S_x\)` is the standard deviation of `\(x\)`
+
+---
+
+# Standardizing
+
+
+```r
+gss &lt;- gss %&gt;% 
+  mutate( z_prestige = ( prestg10 - mean( prestg10 )) / 
+            sd(prestg10) )
+```
+
+There are easier ways to do this, but this is the most transparent.
+
+---
+
+# Same shape, different scale
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-14-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+class: center, middle, inverse
+
+# 3. Visualizing two variables
+
+---
+
+# Boxplot
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-15-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Scatterplot
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-16-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Scatterplot (with label)
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-17-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Correlation (Pearson's _r_ )
+
+`\(~\)`
+
+`$$r = \frac{1}{n-1}\sum^n_{i=1} \left( \frac{x_i-\bar{x}}{S_x}\times\frac{y_i-\bar{y}}{S_y} \right)$$`
+
+`\(~\)`
+
+In other words, it's the average of the product of two variables' z-scores. It's a measure of how strongly two variables are associated.
+
+---
+
+# Correlation
+
+- On average, how do two variables move together
+
+- Positive (negative) correlation: When x is larger than its mean, y is likely (unlikely) to be larger than its mean
+
+- Positive (negative) correlation: data cloud slopes up (down)
+
+- High correlation: data cluster tightly around a line
+
+---
+class: small
+
+# Correlation matrix
+
+
+```r
+gm2011 %&gt;% 
+  select( gdp , life_expectancy , fertility ) %&gt;% 
+  corrr::correlate( diagonal = 1 ) %&gt;% 
+  knitr::kable( format = "html" , digits = 2 )
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; rowname &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; gdp &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; life_expectancy &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; fertility &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; gdp &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.18 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; life_expectancy &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.76 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; fertility &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.76 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.00 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Scatterplot matrix
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-19-1.svg" style="display: block; margin: auto;" /&gt;
+
+???
+
+Visualizing would help you see that GDP need to be transformed. 
+
+---
+background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Anscombe.svg/1200px-Anscombe.svg.png)
+background-size: contain
+
+???
+
+This is Anscombe's quartet. The means, SDs, and correlations are all the same! That's why to visualize.
+
+---
+class: middle, center, inverse
+
+# 4. Measuring class
+## (it's harder than it seems)
+
+---
+
+# Income, education, occupational prestige
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-20-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Cluster analysis
+
+
+```r
+class &lt;- class %&gt;% 
+  mutate( z_inc = scale( conrinc ) ,
+          z_edu = scale( educ ) ,
+          z_occ = scale( prestg10 ))
+```
+
+---
+
+# Cluster analysis
+
+
+```r
+# Set seed for reproducibility
+set.seed(9219)
+
+# Do the cluster analysis (3 clusters) 
+km3 &lt;- 
+  kmeans( select( class, starts_with("z_") ), 
+          centers = 3 , 
+          nstart = 5 )
+
+# Add cluster assignment to the dataframe
+class &lt;- class %&gt;% 
+  mutate( cluster = km3$cluster )
+```
+
+---
+
+# Results
+
+
+```r
+km3$size
+```
+
+```
+## [1] 368 527  80
+```
+
+```r
+km3$centers
+```
+
+```
+##         z_inc      z_edu      z_occ
+## 1  0.05720355  0.7341982  0.7760705
+## 2 -0.43850201 -0.6226861 -0.6503874
+## 3  2.62549567  0.7246330  0.7145029
+```
+
+---
+
+# More variation within than between
+
+&lt;img src="measurement_files/figure-html/unnamed-chunk-24-1.svg" style="display: block; margin: auto;" /&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

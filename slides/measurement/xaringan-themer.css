@@ -29,10 +29,10 @@ body {
 h1, h2, h3 {
   font-family: 'Yanone Kaffeesatz';
   font-weight: normal;
-  color: #012169;
+  color: #C84E00;
 }
 .remark-slide-content {
-  background-color: #E5E8F0;
+  background-color: #FFFFFF;
   font-size: 30px;
   
   
@@ -63,11 +63,11 @@ h1, h2, h3 {
 .remark-slide-number {
   color: #012169;
   opacity: 1;
-  font-size: 0.9em;
+  font-size: 0.6em;
 }
 strong{color:#012169;}
 a, a > code {
-  color: #012169;
+  color: #993399;
   text-decoration: none;
 }
 .footnote {
@@ -78,18 +78,18 @@ a, a > code {
   font-size: 0.9em;
 }
 .remark-code-line-highlighted {
-  background-color: rgba(255,255,0,0.5);
+  background-color: rgba(161,183,13,0.5);
 }
 .inverse {
   background-color: #012169;
-  color: #E5E8F0;
+  color: #FFFFFF;
   
 }
 .inverse h1, .inverse h2, .inverse h3 {
-  color: #E5E8F0;
+  color: #FFFFFF;
 }
 .title-slide, .title-slide h1, .title-slide h2, .title-slide h3 {
-  color: #E5E8F0;
+  color: #FFFFFF;
 }
 .title-slide {
   background-color: #012169;
@@ -144,11 +144,11 @@ blockquote {
 th, td { padding: 5px; }
 .remark-slide thead, .remark-slide tfoot, .remark-slide tr:nth-child(even) { background: #CCD2E1 }
 table.dataTable tbody {
-  background-color: #E5E8F0;
+  background-color: #FFFFFF;
   color: #001749;
 }
 table.dataTable.display tbody tr.odd {
-  background-color: #E5E8F0;
+  background-color: #FFFFFF;
 }
 table.dataTable.display tbody tr.even {
   background-color: #CCD2E1;

@@ -15,7 +15,8 @@ output:
       countIncrementalSlides: false
 ---
 
-```{r message = FALSE, echo = FALSE}
+```{r setup, echo=FALSE, message = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, fig.align = 'center', fig.width = 8, fig.height = 5 , dev = 'svg')
 library(here)
 library(tidyverse)
 
@@ -25,9 +26,14 @@ library(tidyverse)
 library(xaringanthemer)
 mono_light(
   base_color = "#012169" ,
+  white_color = "#FFFFFF" ,
   text_font_size = "30px" ,
   code_font_size = ".9em" ,
-  code_font_family = "Input")
+  code_font_family = "Input" ,
+  header_color = "#C84E00" ,
+  text_slide_number_font_size = "0.6em" ,
+  code_highlight_color = "rgba(161,183,13,0.5)" ,
+  link_color = "#993399" )
 
 ```
 
@@ -42,8 +48,11 @@ Ask me two questions about the concepts
 # Today's agenda
 
 1. Surveys and sampling
+
 2. Visualizing univariate data
+
 3. Visualizing bivariate data
+
 4. Measuring "class"
 
 
@@ -59,15 +68,18 @@ class: center, middle, inverse
 .pull-left[
 
 - Source: auto registrations, phone books
+
 - 10 million straw poll ballots sent out
+
 - 2.3 million returned
+
 - Gallup used 50,000 respondents
 
 ]
 
 .pull-right[
 
-```{r echo = FALSE, fig.align='center', out.width="60%"}
+```{r out.width="60%"}
 knitr::include_graphics("/images/litdigest.jpg")
 
 ```
@@ -94,7 +106,7 @@ Gallup's prediction of LD  |              44
 
 # 1948 Election
 
-```{r echo = FALSE, fig.align='center', out.width='80%'}
+```{r out.width='80%'}
 knitr::include_graphics("/images/truman.jpg")
 
 ```
@@ -119,8 +131,10 @@ Roper            |  38   |  53  |     5   |     4
 
 # Quota sampling
 
-- fixed quote of certain respondents for each interviewer
+- fixed quota of certain respondents for each interviewer
+
 - sample resembles the population on these characteristics
+
 - potential unobserved confounding $\rightarrow$ selection bias
 
 
@@ -130,13 +144,15 @@ Roper            |  38   |  53  |     5   |     4
 # Probability sampling
 
 - Ensures representativeness
-- *Definition:* every unit in the population has a **known** non-zero probability of being selected
-- *Simple random sampling:* every unit has an **equal** selection probability
+
+- **Definition:** every unit in the population has a *known* non-zero probability of being selected
+
+- **Simple random sampling:** every unit has an *equal* selection probability
 
 
 ---
 
-# Sources of Bias
+# Sources of bias
  
  Population                       |     Sample         |      Potential Bias   |
 :--------------------------------:|:------------------:|:---------------------:|
@@ -161,18 +177,18 @@ Roper            |  38   |  53  |     5   |     4
 # Difficulty of drawing a random sample
 
 Problems of telephone survey
-- Random digit dialing from phone book
-- Cell phones (double counting for richer participants)
-- Caller ID screening (unit non-response)
+- random digit dialing from phone book
+- cell phones (double counting for richer participants)
+- caller ID screening (unit non-response)
 
 --
 
 An alternative: Internet survey
-- Opt-in panels, respondent driven sampling   
+- opt-in panels, respondent driven sampling   
 - non-probability sampling
-- Cheap but non-representative
-- Digital divide: rich vs. poor, young vs. old
-- Correct for potential sampling bias via statistical methods
+- cheap but non-representative
+- digital divide: rich vs. poor, young vs. old
+- correct for potential sampling bias via statistical methods
 
 ---
 
@@ -210,7 +226,7 @@ gss <-
 
 # Distribution of age
 
-```{r}
+```{r, echo = TRUE}
 p <- ggplot(gss, aes( x = age )) +
   geom_bar() +
   theme_minimal()
@@ -219,8 +235,345 @@ p <- ggplot(gss, aes( x = age )) +
 
 ---
 
-```{r, echo = FALSE, fig.width=12, fig.height=7, fig.align='center'}
+# Histogram
+
+```{r}
 p
 
 ```
+
+---
+
+# Coarsened histogram
+
+```{r, echo = TRUE}
+p <- ggplot(gss, aes( x = age  )) +
+  geom_histogram( color = "white" ,
+                  breaks = seq(15, 90, 5)) +
+  theme_minimal()
+
+```
+
+---
+
+```{r}
+p
+
+```
+
+---
+
+# Density plot
+
+```{r, echo = TRUE}
+p <- ggplot(gss, aes( x = age )) +
+  geom_line( stat = "density" ) +
+  theme_minimal()
+
+```
+
+---
+
+```{r}
+p
+
+```
+
+---
+
+# Using logarithms
+
+- often used for skewed variables (e.g., populations, incomes)
+
+- $y=\text{log}_b x$, where $b$ is a base and $x$ is a positive number
+
+- if $b$ is 10, then
+
+--
+
+  - $\text{log}_{10}1000 = 3$
+
+--
+  
+  - $\text{log}_{10}.02 = -2$
+  
+--
+
+- we often will use base $e \approx 2.7182$, which has some particular advantages
+
+---
+
+.small[
+
+```{r echo = TRUE}
+data(gapminder, package = "dslabs")
+gm2011 <- gapminder %>% 
+  filter( year == 2011 ) %>% 
+  mutate( log10pop = log10( population ) ) %>% 
+  drop_na()
+
+p1 <- ggplot( gm2011 , aes( x = population ) ) +
+  geom_line( stat = "density" ) +
+  theme_minimal() +
+  labs( title = "Raw population" )
+
+p2 <- ggplot( gm2011 , aes( x = log10pop ) ) +
+  geom_line( stat = "density" ) +
+  theme_minimal() +
+  labs( title = "log(10) population" )
+
+```
+]
+
+---
+
+```{r}
+gridExtra::grid.arrange( p1, p2, nrow = 1)
+
+```
+
+---
+
+# Variables without natural units
+
+```{r}
+ggplot( gss , aes( x = prestg10 )) +
+  geom_line( stat = "density" ) +
+  theme_minimal()
+
+
+```
+
+---
+
+# Calculating the z-score
+
+z-score of $x_i =$ $$\frac{x_i - \bar{x}}{S_x}$$
+
+where $\bar{x}$ is the mean of $x$
+
+where $S_x$ is the standard deviation of $x$
+
+---
+
+# Standardizing
+
+```{r echo = TRUE}
+gss <- gss %>% 
+  mutate( z_prestige = ( prestg10 - mean( prestg10 )) / 
+            sd(prestg10) )
+```
+
+There are easier ways to do this, but this is the most transparent.
+
+---
+
+# Same shape, different scale
+
+```{r}
+ggplot( gss , aes( x = z_prestige )) +
+  geom_line( stat = "density" ) +
+  theme_minimal()
+
+```
+
+---
+class: center, middle, inverse
+
+# 3. Visualizing two variables
+
+---
+
+# Boxplot
+
+```{r}
+ggplot( gm2011 , aes( y = log10pop ,
+                      x = continent , 
+                      group = continent ) ) +
+  geom_boxplot() +
+  labs( y = "Population (log(10)" ,
+        x = "Continent") +
+  theme_minimal()
+
+```
+
+---
+
+# Scatterplot
+
+```{r}
+ggplot( gm2011 , aes( x = gdp/population , y = life_expectancy ) ) +
+  geom_point() +
+  scale_x_log10( labels = scales::comma ) +
+  labs( x = "GDP per capita" ,
+        y = "Life expectancy"  ) +
+  theme_minimal()
+
+```
+
+---
+
+# Scatterplot (with label)
+
+```{r}
+ggplot( gm2011 , aes( x = gdp/population , y = life_expectancy ) ) +
+  geom_text( aes( label = country )) +
+  scale_x_log10( labels = scales::comma ) +
+  labs( x = "GDP per capita" ,
+        y = "Life expectancy"  ) +
+  theme_minimal()
+
+```
+
+---
+
+# Correlation (Pearson's _r_ )
+
+$~$
+
+$$r = \frac{1}{n-1}\sum^n_{i=1} \left( \frac{x_i-\bar{x}}{S_x}\times\frac{y_i-\bar{y}}{S_y} \right)$$
+
+$~$
+
+In other words, it's the average of the product of two variables' z-scores. It's a measure of how strongly two variables are associated.
+
+---
+
+# Correlation
+
+- On average, how do two variables move together
+
+- Positive (negative) correlation: When x is larger than its mean, y is likely (unlikely) to be larger than its mean
+
+- Positive (negative) correlation: data cloud slopes up (down)
+
+- High correlation: data cluster tightly around a line
+
+---
+class: small
+
+# Correlation matrix
+
+```{r, echo = TRUE}
+gm2011 %>% 
+  select( gdp , life_expectancy , fertility ) %>% 
+  corrr::correlate( diagonal = 1 ) %>% 
+  knitr::kable( format = "html" , digits = 2 )
+
+```
+
+---
+
+# Scatterplot matrix
+
+```{r}
+gm2011 %>%
+  mutate( gdpcap = (gdp / 1000) / population ) %>% 
+  select( gdpcap , life_expectancy , fertility ) %>% 
+  GGally::ggpairs() +
+  theme_minimal()
+
+```
+
+???
+
+Visualizing would help you see that GDP need to be transformed. 
+
+---
+background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Anscombe.svg/1200px-Anscombe.svg.png)
+background-size: contain
+
+???
+
+This is Anscombe's quartet. The means, SDs, and correlations are all the same! That's why to visualize.
+
+---
+class: middle, center, inverse
+
+# 4. Measuring class
+## (it's harder than it seems)
+
+---
+
+# Income, education, occupational prestige
+
+```{r echo = FALSE}
+class <- gss %>% 
+  filter( wrkstat==1 ) %>% 
+  select( educ , conrinc, prestg10 )
+
+GGally::ggpairs( class ) + theme_minimal()
+
+```
+
+---
+
+# Cluster analysis
+
+```{r, echo = TRUE}
+class <- class %>% 
+  mutate( z_inc = scale( conrinc ) ,
+          z_edu = scale( educ ) ,
+          z_occ = scale( prestg10 ))
+
+```
+
+---
+
+# Cluster analysis
+
+```{r, echo = TRUE}
+# Set seed for reproducibility
+set.seed(9219)
+
+# Do the cluster analysis (3 clusters) 
+km3 <- 
+  kmeans( select( class, starts_with("z_") ), 
+          centers = 3 , 
+          nstart = 5 )
+
+# Add cluster assignment to the dataframe
+class <- class %>% 
+  mutate( cluster = km3$cluster )
+
+```
+
+---
+
+# Results
+
+```{r, echo = TRUE}
+
+km3$size
+km3$centers
+
+```
+
+---
+
+# More variation within than between
+
+```{r}
+pp <- ggplot( class, aes( y = prestg10 , x = cluster , group = cluster ) ) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs( title = "Prestige" )
+
+pe <- ggplot( class, aes( y = educ , x = cluster , group = cluster ) ) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs( title = "Education" )
+
+pi <- ggplot( class, aes( y = conrinc , x = cluster , group = cluster ) ) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs( title = "Income" )
+
+gridExtra::grid.arrange(pp, pe, pi, nrow = 1)
+
+```
+
+
+
+
 
