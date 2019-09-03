@@ -13,4 +13,4 @@ The links to the compiled slides are below. This is very much a work in progress
 
 [Causality](http://vaiseys.github.io/soc722/slides/causality/causality.html)
 
-[Measurement](http://vaiseys.github.io/soc722/slides/causality/causality.html)
+[Measurement](http://vaiseys.github.io/soc722/slides/measurement/measurement.html)
