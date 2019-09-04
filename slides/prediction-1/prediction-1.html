@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
-    <title>Prediction (part 1)</title>
+    <title>Prediction Part I</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Stephen Vaisey" />
+    <meta name="author" content="Stephen Vaisey Professor of Sociology and Political Science Duke University" />
+    <link href="libs/font-awesome-5.3.1/css/fontawesome-all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
-class: center, middle, inverse, title-slide
+class: left, middle, inverse, title-slide
 
-# Prediction (part 1)
-## Sociology 722
-### Stephen Vaisey
-### Duke University
-### 2019/09/03 (updated: 2019-09-03)
+# Prediction<br><small>Part I</small>
+### Stephen Vaisey<br>Professor of Sociology and Political Science<br>Duke University
+### Fall 2019<br><br><small><i class="fas  fa-link "></i> <a href='stephenvaisey.com'><font color='F3F2F1'>stephenvaisey.com</font></a><br><i class="fab  fa-twitter "></i> <a href='http://twitter.com/vaiseys'><font color='F3F2F1'><span class="citation">@vaiseys</span></font></a><br><i class="fab  fa-github "></i> <a href='https://github.com/vaiseys'><font color='F3F2F1'><span class="citation">@vaiseys</span></font></a></small>
 
 ---
 
@@ -26,7 +25,8 @@ class: center, middle, inverse, title-slide
 
 # Homework debrief
 
-Ask me two questions about the concepts
+Ask **two questions** about the concepts
+
 
 ---
 
@@ -36,20 +36,21 @@ Ask me two questions about the concepts
 rarely trying to predict future events
 
 - The prediction we’re generally interested in is prediction of patterns 
-outside the sample (generalization)
+outside the sample (i.e., **generalization**)
 
-- Out-of-sample prediction is a stronger test of understanding than in-sample prediction
+- **Out-of-sample prediction** is a stronger test of understanding than in-sample prediction
 
 ---
 
 # Example: Fragile Families Challenge (2017)
 
-&lt;img src="https://vaiseys.github.io/soc722/images/ffchallenge.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="https://vaiseys.github.io/soc722/images/ffchallenge.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-background-image: url(https://vaiseys.github.io/soc722/images/ffchallenge-results.png)
-background-size: contain
+# Results (less error is better)
+
+&lt;img src="https://vaiseys.github.io/soc722/images/ffchallenge-results.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -96,7 +97,7 @@ In other words, it's the average of the product of two variables' z-scores. It's
 
 # Visualizing different correlations
 
-&lt;img src="prediction-1_files/figure-html/unnamed-chunk-2-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="prediction-1_files/figure-html/diffcorrs-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -107,14 +108,208 @@ In other words, it's the average of the product of two variables' z-scores. It's
 
 ---
 
-background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Anscombe.svg/1200px-Anscombe.svg.png)
-background-size: contain
+# Anscombe's quartet
 
-???
+&lt;img src="prediction-1_files/figure-html/anscombe-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
-This is Anscombe's quartet. The means, SDs, and correlations are all the same! That's why we visualize.
 
 ---
+
+# Correlations: 2011 Gapminder data
+
+
+```r
+data( gapminder , package = "dslabs" )
+gm2011 &lt;- gapminder %&gt;% 
+  filter( year == 2011 ) %&gt;% 
+  drop_na()
+```
+
+---
+
+# Correlation matrix
+
+
+```r
+corrr::correlate( 
+  select( gm2011,
+          infant_mortality, 
+          life_expectancy,
+          fertility ) ,
+  diagonal = 1 ) %&gt;% 
+  knitr::kable( digits = 3 )
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; rowname &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; infant_mortality &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; life_expectancy &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; fertility &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; infant_mortality &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.871 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.848 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; life_expectancy &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.871 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.761 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; fertility &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.848 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.761 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.000 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Scatterplot matrix
+
+&lt;img src="prediction-1_files/figure-html/scatmat-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+class: center, middle, inverse
+
+# 2. Linear Regression Model
+
+---
+
+# Where do we draw the line?
+
+&lt;img src="prediction-1_files/figure-html/scatter-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Linear regression model
+
+`$$Y = \alpha + \beta X + \varepsilon$$`
+
+&lt;small&gt;
+
+| Symbol|  Meaning |
+|:------|---------:|
+| `\(Y\)` | outcome variable |
+| `\(X\)` | predictor variable |
+| `\(\alpha\)`, `\(\beta\)` | parameters of the model |
+| `\(\varepsilon\)` | unobserved random error |
+| | |
+| `\(\alpha+\beta X\)` | expected mean of `\(Y\)` given a value of `\(X\)`  |
+| `\(\alpha\)` | expected value of `\(Y\)` when `\(X=0\)` |
+| `\(\beta\)` | expected change in `\(Y\)` given 1-unit increase in `\(X\)` |
+
+&lt;/small&gt;
+
+---
+
+# The regression line
+
+&lt;img src="prediction-1_files/figure-html/regline-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Getting the equation
+
+
+```r
+fit1 &lt;- lm( fertility ~ life_expectancy ,
+            data = gm2011 )
+fit1
+```
+
+```
+## 
+## Call:
+## lm(formula = fertility ~ life_expectancy, data = gm2011)
+## 
+## Coefficients:
+##     (Intercept)  life_expectancy  
+##         12.3694          -0.1333
+```
+
+---
+
+# Regression as a *model*
+
+fertility `\(= 12.4 -.13 \times\)`life_expectancy `\(+ \text{ }\varepsilon\)`
+
+--
+
+From 370 pieces of information (185 `\(\times\)` 2) to just two pieces: **slope** and 
+**intercept**
+
+--
+
+So what's a good guess for a country with a life expectancy of 80 years?
+
+--
+
+.center[The answer is **2**!]
+
+---
+
+# Why _this_ line?
+
+### Estimate the model parameters from the data
+`\((\hat{\alpha},\hat{\beta})\)` are estimated coefficients &lt;br&gt;
+`\(\hat{Y} = \hat{\alpha}+\hat{\beta}X\)` are fitted/predicted values &lt;br&gt;
+`\(\hat{\varepsilon} = Y - \hat{Y}\)` are estimated residuals
+
+### We obtain these estimates via least squares
+
+That is, minimizing `\(SSR = \sum\hat{\varepsilon_i}^2\)` or `\(RMSE= \sqrt{\frac{SSR}{n}}\)`
+
+---
+
+# Some algebra for least squares
+
+### Estimated coefficients in mathematical expressions:
+
+`$$\hat{\beta} = \frac{\sum(Y_i - \bar{Y}) (X_i - \bar{X})} {\sum(X_i - \bar{X})}$$`
+
+$$\hat{\alpha} = \bar{Y} - \hat{\beta}\bar{X} $$
+
+--
+
+### Relationship between slope and correlation
+
+$$\hat{\beta} = corr(Y,X) \times \frac{S_y}{S_x} $$
+
+---
+
+# How well does the model fit?
+
+### In other words, how well does it predict the outcome?
+
+`\(~\)`
+
+`$$R^2 = 1 - \frac{SSR}{TSS} = 1-\frac{\sum \hat{\varepsilon}_i^2}{\sum(Y_i - \bar{Y})}$$`
+
+.footnote[This is the correlation coefficient (_r_) squared. Here's that's about .76. You could say "differences in life expectancy account for 76% of the variance in fertility." But remember, this is **descriptive**, not **causal**.]
+
+---
+
+# More examples if time permits
+
+---
+class: middle, center, inverse
+
+# 3. Regression to the mean
+
+---
+
+# Galton and regression to the mean
+
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Galton%27s_correlation_diagram_1875.jpg" width="50%" style="display: block; margin: auto;" /&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
