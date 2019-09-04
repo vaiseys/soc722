@@ -417,7 +417,7 @@ knitr::include_graphics("https://vaiseys.github.io/soc722/images/hout-mobility.j
 ```
 
 .footnote[<small>Michael Hout. 2018. Americans' occupational status reflects the status 
-of both of their parents. _PNAS_ 115 (38) 9527-9532.</small]
+of both of their parents. _PNAS_ 115 (38) 9527-9532.</small>]
 
 
 
