@@ -346,7 +346,9 @@ $~$
 
 $$R^2 = 1 - \frac{SSR}{TSS} = 1-\frac{\sum \hat{\varepsilon}_i^2}{\sum(Y_i - \bar{Y})}$$
 
-.footnote[This is the correlation coefficient (_r_) squared. Here's that's about .76. You could say "differences in life expectancy account for 76% of the variance in fertility." But remember, this is **descriptive**, not **causal**.]
+.footnote[This is the correlation coefficient (_r_) squared. Here's that's about
+.76. You could say "differences in life expectancy account for 76% of the 
+variance in fertility." But remember, this is **descriptive**, not **causal**.]
 
 ---
 
@@ -366,6 +368,56 @@ knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/b/b2/Gal
 
 ```
 
+???
+
+Kahneman example of Israeli fighter pilots
+Praise -> worse performance
+Criticism -> better performance
+
+---
+
+# Galton and regression to the mean
+
+The correlation between parent and child's height is about .46 in Galton's 
+data. The mean height is (about) 69 inches (5'9"). If a man is 79 inches tall 
+(6'7"), how tall can he expect his male children to be? What about his male 
+grandchildren?
+
+--
+
+**Children** &nbsp;&nbsp;&nbsp;&nbsp; $69 + 10\times.46 \approx 73.6$ inches
+(almost 6'2")
+
+--
+
+**Grandchildren**  &nbsp;&nbsp;&nbsp;&nbsp; $69 + 10\times.46^2 \approx 71.1$ 
+inches (about 5'11")
+
+--
+
+In other words, you get to "keep" about $r \times 100$ percent of your "above-
+averageness" at each generation.
+
+???
+
+Galton multiplied female heights by 1.08 to make them comparable
+
+---
+class: inverse, center, middle
+
+# 4. Additional examples
+
+---
+
+# Occupational mobility in the United States
+
+```{r, out.width="95%"}
+knitr::include_graphics("https://vaiseys.github.io/soc722/images/hout-mobility.jpg")
+
+```
+
+.footnote[<small>Michael Hout. 2018. Americans' occupational status reflects the status 
+of both of their parents. _PNAS_ 115 (38) 9527-9532.</small]
 
 
 
