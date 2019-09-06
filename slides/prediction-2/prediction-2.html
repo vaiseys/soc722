@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Prediction: Part II</title>
+    <meta charset="utf-8" />
+    <meta name="author" content=" Stephen Vaisey Duke University" />
+    <link href="libs/font-awesome-5.3.1/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: left, middle, inverse, title-slide
+
+# Prediction: Part II
+### <br>Stephen Vaisey<br>Duke University
+### <small><small>Fall 2019<br><br><i class="fas  fa-link "></i> <a href='stephenvaisey.com'><font color='F3F2F1'>stephenvaisey.com</font></a><br><i class="fab  fa-twitter "></i> <a href='http://twitter.com/vaiseys'><font color='F3F2F1'><span class="citation">@vaiseys</span></font></a><br><i class="fab  fa-github "></i> <a href='https://github.com/vaiseys'><font color='F3F2F1'><span class="citation">@vaiseys</span></font></a></small></small>
+
+---
+
+
+
+
+
+
+
+# Homework debrief
+
+Ask **two questions** about the concepts
+
+---
+
+# Today's agenda
+
+1. Review of correlation and regression
+
+2. More on linear regression
+
+---
+class: middle, inverse, center
+
+# 1. Correlation and regression
+
+---
+
+# Correlation
+
+- On average, how do two variables move together
+
+- Positive (negative) correlation: When x is larger than its mean, y is likely (unlikely) to be larger than its mean
+
+- Positive (negative) correlation: data cloud slopes up (down)
+
+- High correlation: data cluster tightly around a line
+
+---
+
+# Visualizing different correlations
+
+&lt;img src="prediction-2_files/figure-html/diffcorrs-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Linear regression model
+
+`$$Y = \alpha + \beta X + \varepsilon$$`
+
+&lt;small&gt;
+
+| Symbol|  Meaning |
+|:------|---------:|
+| `\(Y\)` | outcome variable |
+| `\(X\)` | predictor variable |
+| `\(\alpha\)`, `\(\beta\)` | parameters of the model |
+| `\(\varepsilon\)` | unobserved random error |
+| | |
+| `\(\alpha+\beta X\)` | expected mean of `\(Y\)` given a value of `\(X\)`  |
+| `\(\alpha\)` | expected value of `\(Y\)` when `\(X=0\)` |
+| `\(\beta\)` | expected change in `\(Y\)` given 1-unit increase in `\(X\)` |
+
+&lt;/small&gt;
+
+---
+
+# 
+# Some algebra for least squares
+
+### Estimated coefficients in mathematical expressions
+
+`$$\hat{\beta} = \frac{\sum(Y_i - \bar{Y}) (X_i - \bar{X})} {\sum(X_i - \bar{X})}$$`
+
+$$\hat{\alpha} = \bar{Y} - \hat{\beta}\bar{X} $$
+
+--
+
+### Relationship between slope and correlation
+
+$$\hat{\beta} = corr(Y,X) \times \frac{S_y}{S_x} $$
+
+---
+
+# Why _this_ line?
+
+### Estimate the model parameters from the data
+`\((\hat{\alpha},\hat{\beta})\)` are estimated coefficients &lt;br&gt;
+`\(\hat{Y} = \hat{\alpha}+\hat{\beta}X\)` are fitted/predicted values &lt;br&gt;
+`\(\hat{\varepsilon} = Y - \hat{Y}\)` are estimated residuals
+
+### We obtain these estimates via least squares
+
+That is, minimizing `\(SSR = \sum\hat{\varepsilon_i}^2\)` or `\(RMSE= \sqrt{\frac{SSR}{n}}\)`
+
+---
+
+# How well does the model fit?
+
+### In other words, how well does it predict the outcome?
+
+`\(~\)`
+
+`$$R^2 = 1 - \frac{SSR}{TSS} = 1-\frac{\sum \hat{\varepsilon}_i^2}{\sum(Y_i - \bar{Y})}$$`
+
+.footnote[This is the correlation coefficient (_r_) squared. Here's that's about
+.76. You could say "differences in life expectancy account for 76% of the 
+variance in fertility." But remember, this is **descriptive**, not **causal**.]
+
+---
+
+# Remember!
+
+### Regression and correlation assume linearity
+
+---
+
+# Don't do this!
+
+&lt;img src="prediction-2_files/figure-html/notlinear-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# This is a bit better
+
+&lt;img src="prediction-2_files/figure-html/loglinear-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+class: inverse, middle, center
+
+# 2. Regression and causality
+
+---
+
+# Dictator game
+
+- You get 10 raffle tickets to win a prize. You are paired with another 
+respondent who gets no tickets. You can share as many or as few tickets as you want. How many do you want to share?
+
+--
+
+- Experimental condition: is the raffle worth 50 dollars (_v500_ = 0) or 500 
+dollars (_v500_ = 1)?
+
+--
+
+- Research question: are people less likely to share when the raffle is worth 
+more?
+
+---
+
+# The model
+
+`\(~\)`
+
+`$$tickets_i = \alpha + \beta v500_i + \varepsilon_i$$`
+
+`\(~\)`
+
+Are we allowed to give this `\(\beta\)` a causal interpretation or not? Why or why not?
+
+---
+
+# The distribution
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
