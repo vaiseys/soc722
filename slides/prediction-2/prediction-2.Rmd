@@ -267,11 +267,99 @@ Are we allowed to give this $\beta$ a causal interpretation or not? Why or why n
 
 # The distribution
 
-```{r}
-# d <- haven::read_dta(here( "data" , "trolley-dictator.dta" )) %>% 
-#   haven::zap_labels()
-# ggplot( d , aes( x =   ))
+```{r tickets}
+d <- haven::read_dta(here( "data" , "trolley-dictator.dta" )) %>%
+  haven::zap_labels() %>% 
+  select( tickets , v500 , female ) %>% 
+  drop_na()
+ggplot( d , aes( x = tickets )) +
+  geom_bar( aes( y = ..prop.. )) +
+  labs( x = "# of tickets" ,
+        y = "Proportion of cases" ) +
+  scale_x_continuous( breaks = c( 0, 5, 10 ) )
 
 
 ```
+
+---
+
+# Difference-in-means as regression model
+
+```{r, echo = TRUE} 
+tm <- lm( tickets ~ v500 , data = d )
+tm
+
+```
+
+$$E(tickets) = 4.5157 - .5688 \times v500$$
+
+Can we give a causal interpretation? Why or why not?
+
+---
+
+# Treatment heterogeneity
+
+Are female respondents less subject to the effect ?
+
+$$E(tickets) = \alpha + \beta_1 v500 + \beta_2 female + \beta_3 v500 \cdot female$$
+<small>
+```{r, echo = TRUE}
+lm( tickets ~ v500 + female + v500:female , data = d )
+
+```
+</small>
+
+The product term is called an **interaction term**.
+
+---
+
+# Difference-in-difference as regression
+
+$~$
+
+$$y_i = \alpha + \beta_1 T_i + \beta_2 time_{it} + \beta_3 T_i \cdot time_{it} + \varepsilon_{it}$$
+$~$
+
+where $T_i$ is the treatment dummy and $time_{it}$ is the dummy variable that 
+indicates whether the observation of unit _i_ is before (0) or after (1) the introduction of the treatment.
+
+--
+
+$\beta_3$ here gives you the **sample average treatment effect on the treated** 
+(SATT). That is, what would have happened to the treated cases _because_ they
+were treated.
+
+---
+
+# Basque data revisited
+
+```{r basque}
+bd <- read_csv(here("data", "basque.csv")) %>% 
+  mutate( basque = if_else( region == "Basque Country" , 1L , 0L ) ,
+          after = if_else( year >= 1973 , 1L , 0L ))
+
+bd %>% group_by(basque, year) %>%
+  summarize(gdp = mean(gdpcap)) %>% 
+  ggplot(., aes(x = year, y = gdp , color = factor(basque) )) +
+  geom_line() +
+  theme_minimal() +
+  geom_vline( xintercept = 1973 , linetype = "dotted" ) + 
+  labs( x = "Year" ,
+        y = "GDP (Euros) per capita" ,
+        color = "Basque" )
+
+```
+
+---
+
+# Diff-in-diff equation
+
+$$GDP_{it} = \alpha + \beta_1 Basque_i + \beta_2 after_{it} + \beta_3 Basque_i \cdot after_{it} + \varepsilon_{it}$$
+
+```{r, echo = TRUE}
+lm( gdpcap ~ basque + after + basque:after , data = bd )
+
+```
+
+
 

@@ -178,6 +178,103 @@ Are we allowed to give this `\(\beta\)` a causal interpretation or not? Why or w
 ---
 
 # The distribution
+
+&lt;img src="prediction-2_files/figure-html/tickets-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Difference-in-means as regression model
+
+
+```r
+tm &lt;- lm( tickets ~ v500 , data = d )
+tm
+```
+
+```
+## 
+## Call:
+## lm(formula = tickets ~ v500, data = d)
+## 
+## Coefficients:
+## (Intercept)         v500  
+##      4.5157      -0.5688
+```
+
+`$$E(tickets) = 4.5157 - .5688 \times v500$$`
+
+Can we give a causal interpretation? Why or why not?
+
+---
+
+# Treatment heterogeneity
+
+Are female respondents less subject to the effect ?
+
+`$$E(tickets) = \alpha + \beta_1 v500 + \beta_2 female + \beta_3 v500 \cdot female$$`
+&lt;small&gt;
+
+```r
+lm( tickets ~ v500 + female + v500:female , data = d )
+```
+
+```
+## 
+## Call:
+## lm(formula = tickets ~ v500 + female + v500:female, data = d)
+## 
+## Coefficients:
+## (Intercept)         v500       female  v500:female  
+##      4.4005      -0.6676       0.2466       0.1490
+```
+&lt;/small&gt;
+
+The product term is called an **interaction term**.
+
+---
+
+# Difference-in-difference as regression
+
+`\(~\)`
+
+`$$y_i = \alpha + \beta_1 T_i + \beta_2 time_{it} + \beta_3 T_i \cdot time_{it} + \varepsilon_{it}$$`
+`\(~\)`
+
+where `\(T_i\)` is the treatment dummy and `\(time_{it}\)` is the dummy variable that 
+indicates whether the observation of unit _i_ is before (0) or after (1) the introduction of the treatment.
+
+--
+
+`\(\beta_3\)` here gives you the **sample average treatment effect on the treated** 
+(SATT). That is, what would have happened to the treated cases _because_ they
+were treated.
+
+---
+
+# Basque data revisited
+
+&lt;img src="prediction-2_files/figure-html/basque-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Diff-in-diff equation
+
+`$$GDP_{it} = \alpha + \beta_1 Basque_i + \beta_2 after_{it} + \beta_3 Basque_i \cdot after_{it} + \varepsilon_{it}$$`
+
+
+```r
+lm( gdpcap ~ basque + after + basque:after , data = bd )
+```
+
+```
+## 
+## Call:
+## lm(formula = gdpcap ~ basque + after + basque:after, data = bd)
+## 
+## Coefficients:
+##  (Intercept)        basque         after  basque:after  
+##       3.4802        1.6161        3.1613       -0.4832
+```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

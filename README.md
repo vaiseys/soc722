@@ -19,4 +19,6 @@ how xaringan works and what I like.
 
 [Measurement](http://vaiseys.github.io/soc722/slides/measurement/measurement.html)
 
-[Prediction, Part I](http://vaiseys.github.io/soc722/slides/prediction-1/prediction-1.html)
+[Prediction, Part 1](http://vaiseys.github.io/soc722/slides/prediction-1/prediction-1.html)
+
+[Prediction, Part 2](http://vaiseys.github.io/soc722/slides/prediction-2/prediction-2.html)
