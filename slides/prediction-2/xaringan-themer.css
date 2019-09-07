@@ -40,13 +40,13 @@ h1, h2, h3 {
   padding: 1em 4em 1em 4em;
 }
 .remark-slide-content h1 {
-    font-size: 75px;
+    font-size: 80px;
 }
 .remark-slide-content h2 {
     font-size: 60px;
 }
 .remark-slide-content h3 {
-    font-size: 45px;
+    font-size: 40px;
 }
 .remark-code, .remark-inline-code {
   font-family: Input, 'Lucida Console', Monaco, monospace;
@@ -177,7 +177,7 @@ table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
 
 /* Extra CSS */
 .remark-slide-content {
-  padding-top: 50px;
+  padding-top: 60px;
 }
 h1 {
   margin: 0 0 20px 0;

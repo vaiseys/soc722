@@ -31,9 +31,9 @@ mono_light(
   base_color = "#00539B" ,
   white_color = "#F3F2F1" ,
   black_color = "#262626" ,
-  header_h1_font_size = "75px",
+  header_h1_font_size = "80px",
   header_h2_font_size = "60px",
-  header_h3_font_size = "45px",
+  header_h3_font_size = "40px",
   text_font_size = "30px" ,
   code_font_size = ".9em" ,
   code_font_family = "Input" ,
@@ -42,7 +42,7 @@ mono_light(
   code_highlight_color = "rgba(161,183,13,0.5)" ,
   link_color = "#993399" ,
   extra_css = list(
-    ".remark-slide-content" = list("padding-top" = "50px") ,
+    ".remark-slide-content" = list("padding-top" = "60px") ,
     "h1" = list("margin" = "0 0 20px 0") ,
     "h2" = list("margin" = "0 0 20px 0") ,
     "h3" = list("margin" = "0 0 20px 0") )
@@ -51,13 +51,13 @@ mono_light(
 ```
 
 
-# Homework debrief
+## Homework debrief
 
 Ask **two questions** about the concepts
 
 ---
 
-# Today's agenda
+## Today's agenda
 
 1. Review of correlation and regression
 
@@ -70,7 +70,7 @@ class: middle, inverse, center
 
 ---
 
-# Correlation
+## Correlation
 
 - On average, how do two variables move together
 
@@ -82,7 +82,7 @@ class: middle, inverse, center
 
 ---
 
-# Visualizing different correlations
+## Visualizing different correlations
 
 ```{r diffcorrs}
 # make a function that makes fake data with a given correlation
@@ -117,7 +117,7 @@ ggplot( cdata , aes( x = x, y = y )) +
 
 ---
 
-# Linear regression model
+## Linear regression model
 
 $$Y = \alpha + \beta X + \varepsilon$$
 
@@ -138,8 +138,7 @@ $$Y = \alpha + \beta X + \varepsilon$$
 
 ---
 
-# 
-# Some algebra for least squares
+## Some algebra for least squares
 
 ### Estimated coefficients in mathematical expressions
 
@@ -155,7 +154,7 @@ $$\hat{\beta} = corr(Y,X) \times \frac{S_y}{S_x} $$
 
 ---
 
-# Why _this_ line?
+## Why _this_ line?
 
 ### Estimate the model parameters from the data
 $(\hat{\alpha},\hat{\beta})$ are estimated coefficients <br>
@@ -168,7 +167,7 @@ That is, minimizing $SSR = \sum\hat{\varepsilon_i}^2$ or $RMSE= \sqrt{\frac{SSR}
 
 ---
 
-# How well does the model fit?
+## How well does the model fit?
 
 ### In other words, how well does it predict the outcome?
 
@@ -182,13 +181,13 @@ variance in fertility." But remember, this is **descriptive**, not **causal**.]
 
 ---
 
-# Remember!
+## Remember!
 
 ### Regression and correlation assume linearity
 
 ---
 
-# Don't do this!
+## Don't do this!
 
 ```{r notlinear}
 data("gapminder", package = "dslabs")
@@ -211,7 +210,7 @@ ggplot( gm2011 , aes( x = gdpcap , y = fertility ) ) +
 
 ---
 
-# This is a bit better
+## This is a bit better
 
 ```{r loglinear}
 gm2011 <- gm2011 %>% 
@@ -236,7 +235,7 @@ class: inverse, middle, center
 
 ---
 
-# Dictator game
+## Dictator game
 
 - You get 10 raffle tickets to win a prize. You are paired with another 
 respondent who gets no tickets. You can share as many or as few tickets as you want. How many do you want to share?
@@ -253,7 +252,7 @@ more?
 
 ---
 
-# The model
+## The model
 
 $~$
 
@@ -265,7 +264,7 @@ Are we allowed to give this $\beta$ a causal interpretation or not? Why or why n
 
 ---
 
-# The distribution
+## The distribution
 
 ```{r tickets}
 d <- haven::read_dta(here( "data" , "trolley-dictator.dta" )) %>%
@@ -283,7 +282,7 @@ ggplot( d , aes( x = tickets )) +
 
 ---
 
-# Difference-in-means as regression model
+## Difference-in-means as regression model
 
 ```{r, echo = TRUE} 
 tm <- lm( tickets ~ v500 , data = d )
@@ -297,11 +296,14 @@ Can we give a causal interpretation? Why or why not?
 
 ---
 
-# Treatment heterogeneity
+## Treatment heterogeneity
 
 Are female respondents less subject to the effect ?
 
 $$E(tickets) = \alpha + \beta_1 v500 + \beta_2 female + \beta_3 v500 \cdot female$$
+
+--
+
 <small>
 ```{r, echo = TRUE}
 lm( tickets ~ v500 + female + v500:female , data = d )
@@ -309,29 +311,28 @@ lm( tickets ~ v500 + female + v500:female , data = d )
 ```
 </small>
 
+--
+
 The product term is called an **interaction term**.
 
 ---
 
-# Difference-in-difference as regression
+## Difference-in-difference as regression
 
 $~$
 
 $$y_i = \alpha + \beta_1 T_i + \beta_2 time_{it} + \beta_3 T_i \cdot time_{it} + \varepsilon_{it}$$
 $~$
 
-where $T_i$ is the treatment dummy and $time_{it}$ is the dummy variable that 
-indicates whether the observation of unit _i_ is before (0) or after (1) the introduction of the treatment.
+where $T_i$ is the treatment dummy and $time_{it}$ is the dummy variable that indicates whether the observation of unit _i_ is before (0) or after (1) the introduction of the treatment.
 
 --
 
-$\beta_3$ here gives you the **sample average treatment effect on the treated** 
-(SATT). That is, what would have happened to the treated cases _because_ they
-were treated.
+$\beta_3$ here gives you the **sample average treatment effect on the treated** (SATT). That is, what would have happened to the treated cases _because_ they were treated.
 
 ---
 
-# Basque data revisited
+## Basque data revisited
 
 ```{r basque}
 bd <- read_csv(here("data", "basque.csv")) %>% 
@@ -352,7 +353,7 @@ bd %>% group_by(basque, year) %>%
 
 ---
 
-# Diff-in-diff equation
+## Diff-in-diff equation
 
 $$GDP_{it} = \alpha + \beta_1 Basque_i + \beta_2 after_{it} + \beta_3 Basque_i \cdot after_{it} + \varepsilon_{it}$$
 

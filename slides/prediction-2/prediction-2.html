@@ -23,13 +23,13 @@ class: left, middle, inverse, title-slide
 
 
 
-# Homework debrief
+## Homework debrief
 
 Ask **two questions** about the concepts
 
 ---
 
-# Today's agenda
+## Today's agenda
 
 1. Review of correlation and regression
 
@@ -42,7 +42,7 @@ class: middle, inverse, center
 
 ---
 
-# Correlation
+## Correlation
 
 - On average, how do two variables move together
 
@@ -54,13 +54,13 @@ class: middle, inverse, center
 
 ---
 
-# Visualizing different correlations
+## Visualizing different correlations
 
 &lt;img src="prediction-2_files/figure-html/diffcorrs-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# Linear regression model
+## Linear regression model
 
 `$$Y = \alpha + \beta X + \varepsilon$$`
 
@@ -81,8 +81,7 @@ class: middle, inverse, center
 
 ---
 
-# 
-# Some algebra for least squares
+## Some algebra for least squares
 
 ### Estimated coefficients in mathematical expressions
 
@@ -98,7 +97,7 @@ $$\hat{\beta} = corr(Y,X) \times \frac{S_y}{S_x} $$
 
 ---
 
-# Why _this_ line?
+## Why _this_ line?
 
 ### Estimate the model parameters from the data
 `\((\hat{\alpha},\hat{\beta})\)` are estimated coefficients &lt;br&gt;
@@ -111,7 +110,7 @@ That is, minimizing `\(SSR = \sum\hat{\varepsilon_i}^2\)` or `\(RMSE= \sqrt{\fra
 
 ---
 
-# How well does the model fit?
+## How well does the model fit?
 
 ### In other words, how well does it predict the outcome?
 
@@ -125,19 +124,19 @@ variance in fertility." But remember, this is **descriptive**, not **causal**.]
 
 ---
 
-# Remember!
+## Remember!
 
 ### Regression and correlation assume linearity
 
 ---
 
-# Don't do this!
+## Don't do this!
 
 &lt;img src="prediction-2_files/figure-html/notlinear-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# This is a bit better
+## This is a bit better
 
 &lt;img src="prediction-2_files/figure-html/loglinear-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
@@ -148,7 +147,7 @@ class: inverse, middle, center
 
 ---
 
-# Dictator game
+## Dictator game
 
 - You get 10 raffle tickets to win a prize. You are paired with another 
 respondent who gets no tickets. You can share as many or as few tickets as you want. How many do you want to share?
@@ -165,7 +164,7 @@ more?
 
 ---
 
-# The model
+## The model
 
 `\(~\)`
 
@@ -177,13 +176,13 @@ Are we allowed to give this `\(\beta\)` a causal interpretation or not? Why or w
 
 ---
 
-# The distribution
+## The distribution
 
 &lt;img src="prediction-2_files/figure-html/tickets-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# Difference-in-means as regression model
+## Difference-in-means as regression model
 
 
 ```r
@@ -207,11 +206,14 @@ Can we give a causal interpretation? Why or why not?
 
 ---
 
-# Treatment heterogeneity
+## Treatment heterogeneity
 
 Are female respondents less subject to the effect ?
 
 `$$E(tickets) = \alpha + \beta_1 v500 + \beta_2 female + \beta_3 v500 \cdot female$$`
+
+--
+
 &lt;small&gt;
 
 ```r
@@ -229,35 +231,34 @@ lm( tickets ~ v500 + female + v500:female , data = d )
 ```
 &lt;/small&gt;
 
+--
+
 The product term is called an **interaction term**.
 
 ---
 
-# Difference-in-difference as regression
+## Difference-in-difference as regression
 
 `\(~\)`
 
 `$$y_i = \alpha + \beta_1 T_i + \beta_2 time_{it} + \beta_3 T_i \cdot time_{it} + \varepsilon_{it}$$`
 `\(~\)`
 
-where `\(T_i\)` is the treatment dummy and `\(time_{it}\)` is the dummy variable that 
-indicates whether the observation of unit _i_ is before (0) or after (1) the introduction of the treatment.
+where `\(T_i\)` is the treatment dummy and `\(time_{it}\)` is the dummy variable that indicates whether the observation of unit _i_ is before (0) or after (1) the introduction of the treatment.
 
 --
 
-`\(\beta_3\)` here gives you the **sample average treatment effect on the treated** 
-(SATT). That is, what would have happened to the treated cases _because_ they
-were treated.
+`\(\beta_3\)` here gives you the **sample average treatment effect on the treated** (SATT). That is, what would have happened to the treated cases _because_ they were treated.
 
 ---
 
-# Basque data revisited
+## Basque data revisited
 
 &lt;img src="prediction-2_files/figure-html/basque-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# Diff-in-diff equation
+## Diff-in-diff equation
 
 `$$GDP_{it} = \alpha + \beta_1 Basque_i + \beta_2 after_{it} + \beta_3 Basque_i \cdot after_{it} + \varepsilon_{it}$$`
 
