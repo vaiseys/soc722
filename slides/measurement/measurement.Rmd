@@ -1,9 +1,7 @@
 ---
 title: "Measurement"
-subtitle: "Sociology 722"
-author: "Stephen Vaisey"
-institute: "Duke University"
-date: "2019/08/30 (updated: `r Sys.Date()`)"
+author: "<br>Stephen Vaisey<br>Duke University"
+date: "<small><small>Fall 2019<br><br>`r icon::fa_link()` <a href='stephenvaisey.com'><font color='F3F2F1'>stephenvaisey.com</font></a><br>`r icon::fa_twitter()` <a href='http://twitter.com/vaiseys'><font color='F3F2F1'>@vaiseys</font></a><br>`r icon::fa_github()` <a href='https://github.com/vaiseys'><font color='F3F2F1'>@vaiseys</font></a></small></small> "
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -13,6 +11,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+      titleSlideClass: ["left", "middle", "inverse"]
 ---
 
 ```{r setup, echo=FALSE, message = FALSE}
@@ -25,8 +24,9 @@ library(tidyverse)
 ```{r xaringan-themer, include = FALSE}
 library(xaringanthemer)
 mono_light(
-  base_color = "#012169" ,
-  white_color = "#FFFFFF" ,
+  base_color = "#00539B" ,
+  white_color = "#F3F2F1" ,
+  black_color = "#262626" ,
   text_font_size = "30px" ,
   code_font_size = ".9em" ,
   code_font_family = "Input" ,

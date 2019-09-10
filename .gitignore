@@ -1,6 +1,9 @@
 # libraries
 libs/
 
+# homework templates
+templates/
+
 # History files
 .Rhistory
 .Rapp.history
