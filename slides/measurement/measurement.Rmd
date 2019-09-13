@@ -79,7 +79,7 @@ class: center, middle, inverse
 
 .pull-right[
 
-```{r out.width="60%"}
+```{r, out.width="60%"}
 knitr::include_graphics("https://vaiseys.github.io/soc722/images/litdigest.jpg")
 
 ```
@@ -295,7 +295,7 @@ p
 
 --
   
-  - $\text{log}_{10}.02 = -2$
+  - $\text{log}_{10}.01 = -2$
   
 --
 
