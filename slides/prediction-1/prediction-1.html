@@ -295,8 +295,8 @@ $$\hat{\beta} = corr(Y,X) \times \frac{S_y}{S_x} $$
 `$$R^2 = 1 - \frac{SSR}{TSS} = 1-\frac{\sum \hat{\varepsilon}_i^2}{\sum(Y_i - \bar{Y})}$$`
 
 .footnote[This is the correlation coefficient (_r_) squared. Here's that's about
-.76. You could say "differences in life expectancy account for 76% of the 
-variance in fertility." But remember, this is **descriptive**, not **causal**.]
+-.76 so the square is .58. You could say "differences in life expectancy account
+for 58% of the variance in fertility." But remember, this is **descriptive**, not **causal**.]
 
 ---
 
@@ -407,7 +407,24 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     deleted = true;
   });
-})();</script>
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 (function() {

@@ -234,7 +234,7 @@ class: center, middle, inverse
 ```{r scatter}
 ggplot( gm2011 , aes( x = life_expectancy , y = fertility , color = continent ) ) +
   geom_point( alpha = .5 ) +
-  labs( title = "Life Expectancy and Fertility in 185 countries, 2011" ,
+  labs( title = "Life Expectancy and Fertility in 166 countries, 2011" ,
         x = "Life Expectancy in Years" ,
         y = "Average # of children per woman" , 
         color = "Continent")
@@ -270,7 +270,7 @@ $$Y = \alpha + \beta X + \varepsilon$$
 ggplot( gm2011 , aes( x = life_expectancy , y = fertility ) ) +
   geom_point( alpha = .5 , aes( color = continent ) ) +
   geom_line( stat = "smooth" , method = "lm" , color = "#262626" , alpha = .7 ) +
-  labs( title = "Life Expectancy and Fertility in 185 countries, 2011" ,
+  labs( title = "Life Expectancy and Fertility in 166 countries, 2011" ,
         x = "Life Expectancy in Years" ,
         y = "Average # of children per woman" , 
         color = "Continent")
@@ -347,8 +347,8 @@ $~$
 $$R^2 = 1 - \frac{SSR}{TSS} = 1-\frac{\sum \hat{\varepsilon}_i^2}{\sum(Y_i - \bar{Y})}$$
 
 .footnote[This is the correlation coefficient (_r_) squared. Here's that's about
-.76. You could say "differences in life expectancy account for 76% of the 
-variance in fertility." But remember, this is **descriptive**, not **causal**.]
+-.76 so the square is .58. You could say "differences in life expectancy account
+for 58% of the variance in fertility." But remember, this is **descriptive**, not **causal**.]
 
 ---
 
