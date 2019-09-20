@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Probability, Part I</title>
+    <meta charset="utf-8" />
+    <meta name="author" content=" Stephen Vaisey Duke University" />
+    <link href="libs/font-awesome-5.3.1/css/fontawesome-all.min.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+    <script src="libs/viz-0.3/viz.js"></script>
+    <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+    <script src="libs/grViz-binding-1.0.1/grViz.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+    <link rel="stylesheet" href="addons.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: left, middle, inverse, title-slide
+
+# Probability, Part I
+### <small><br>Stephen Vaisey<br>Duke University</small>
+### <span style="font-size: 65%;">Last update: 2019-09-20<br><br><i class="fas  fa-link "></i> <a href='stephenvaisey.com'><font color='F3F2F1'>stephenvaisey.com</font></a><br><i class="fab  fa-twitter "></i> <a href='http://twitter.com/vaiseys'><font color='F3F2F1'><span class="citation">@vaiseys</span></font></a><br><i class="fab  fa-github "></i> <a href='https://github.com/vaiseys'><font color='F3F2F1'>vaiseys</font></a></span>
+
+---
+
+
+
+
+
+
+class: center, middle
+
+# Ask two questions
+
+---
+class: center, middle
+
+# Assessment time
+
+---
+
+## Today's agenda
+
+1. The big picture
+
+2. Probability
+
+---
+class: center,middle,inverse
+
+# The big picture 
+## Why are we learning statistics?
+
+
+---
+
+## Hypotheses, processes, models
+
+.pull-left[
+<div id="htmlwidget-7dec18d85d08d66da3f0" style="width:100%;height:500px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7dec18d85d08d66da3f0">{"x":{"diagram":"\ngraph process_mods {\n\n  # a \"graph\" statement\n  graph [layout = dot,\n         rankdir = LR]\n\n  # nodes\n  node [fontsize = 5.5, fixedsize = TRUE, fontname = Lato]\n  \n  node [shape = egg]\n  \n    h1 [label = \"H1: \n class origins matter\"]\n    h0 [label = \"H0: \n class origins irrelevant\"]\n\n  node [shape = rectangle]\n\n    p1 [label = \"P1: direct transfers\"]\n    p2 [label = \"P2: cultural capital\" ]\n    p3 [label = \"P3: heritability\"]\n    p4 [label = \"P4: nominal \n meritocracy\"]\n    \n  node [shape = circle]\n    m1 [label = \"M1: \n r(PC) > 0\"] \n    m2 [label = \"M2: \n r(PC) = 0\"]\n\n  edge[color = black]\n    h0 -- {p3 p4}\n    h1 -- {p1 p2}\n    {p1 p2 p3} -- m1\n    p4 -- m2\n    \n  subgraph P {\n    rank = same; p1; p2; p3; p4;\n  }\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+]
+
+.pull-right[
+
+Hypotheses and statistics are connected by **process models** that posit how
+the social world actually works. 
+
+There isn't usually a 1:1 mapping between models and hypotheses but different
+processes leave different "traces" that can be detected.
+
+]
+
+???
+
+By "origins" you mean the effect of growing up in a certain class.
+
+---
+class: center,inverse,middle
+
+# Probability
+
+---
+
+## Two main interpretations
+
+### Frequentist
+
+- *interpretation*: long-run frequency
+- *typical examples*: repeatable events like dice or coins
+
+--
+
+### Bayesian
+
+- *interpretation*: subjective probability
+- *typical examples*: predictions like rain and elections
+  
+The *main* difference for right now is in interpretation rather than 
+computation.
+
+---
+
+## Probability concepts
+
+1. **Experiment:** an action or set of actions that produce random events of 
+interest
+
+--
+
+2. **Sample space:** the set of all possible outcomes of the experiment, 
+typically denoted by `\(\Omega\)`.
+
+--
+
+3. **Event:** a subset of the sample space
+
+---
+
+## Probability axioms
+
+1. The probability of any event is non-negative:
+`\(P(A) \ge 0\)`
+
+--
+
+2. The probability that one of the outcomes in the sample space occurs is 1:
+`\(P(\Omega) = 1\)`.
+
+--
+
+3. (*Addition rule*) If the events are mutually exclusive, then
+`\(P(A \text{ or } B) = P(A) + P(B)\)`
+
+---
+
+.pull-left[
+
+![](img/seatmap.jpg)
+
+]
+
+.pull-right[
+
+Compute the following:
+
+`\(P(window)\)`
+
+`\(P(aisle)\)`
+
+`\(P(window \text{ or } aisle)\)`
+
+`\(P(exit\text{ }row)\)`
+]
+
+---
+class: inverse
+background-image: url(img/dice.jpg)
+background-size: cover
+
+--
+
+.footnote[How many possibilities are there?]
+
+---
+
+## The "Garden of Forking Data"
+
+.footnote[The following discussion is adapted from McElreath's *Statistical Rethinking*]
+
+### The future
+
+- many possible paths
+- each choice forecloses others
+
+--
+
+### The data
+
+- many possible events
+- each observation eliminates some
+
+---
+
+## Example 1: marbles
+
+- Imagine you have a bag of three marbles. Either two of them are blue and one
+of them is white (H1) or one of them is blue and two of them are white (H2).
+
+--
+
+- Before you try reach into the bag at all, what is your best guess about 
+whether H1 or H2 is more likely?
+
+--
+
+- Now you pull out one marble and it's blue. What is the probability that H1
+is true?
+
+--
+
+- You replace the first marble and try again. It's also blue. What is the 
+probability now that H1 is true?
+
+---
+
+## Plausibility and counting the ways
+
+.pull-left[
+<div id="htmlwidget-d386b99c31618f4bd541" style="width:80%;height:400px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d386b99c31618f4bd541">{"x":{"diagram":"\ngraph twoblue {\n\n  # a \"graph\" statement\n  graph [layout = neato, rankdir = LR]\n\n  node [shape = plaintext, label = \"H1 \n DGP\", fontname = Lato]\n  start\n\n  # nodes\n  node [fillcolor = DodgerBlue, penwidth = .4, shape = circle, label = \" \", \n  style = filled]\n  \n  h1 h2 \n  \n  h1h1 h1h2 h2h1 h2h2 t3h1 t3h2\n  \n  node [fillcolor = white]\n    \n  t3 h1t3 h2t3 t3t3\n  \n  edge [penwidth = .4]\n  \n  start -- {h1 h2 t3}\n  \n  h1 -- {h1h1 h1h2 h1t3}\n  \n  h2 -- {h2h1 h2h2 h2t3}\n  \n  t3 -- {t3h1 t3h2 t3t3}\n  \n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+]
+
+.pull-right[
+<div id="htmlwidget-ac3be107ea6a24841702" style="width:80%;height:400px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ac3be107ea6a24841702">{"x":{"diagram":"\ngraph oneblue {\n\n  # a \"graph\" statement\n  graph [layout = neato, rankdir = LR]\n\n  node [shape = plaintext, label = \"H2 \n DGP\", fontname = Lato]\n  start\n\n  # nodes\n  node [fillcolor = DodgerBlue, penwidth = .4, shape = circle, label = \" \", \n  style = filled]\n  \n  h1 \n  \n  h1h1  t2h1  t3h1 \n  \n  node [fillcolor = white]\n    \n  t3 h1t3 t2t3 t3t3 t2 h1t2 t2t2 t3t2\n  \n  edge [penwidth = .4]\n  \n  start -- {h1 t2 t3}\n  \n  h1 -- {h1h1 h1t2 h1t3}\n  \n  t2 -- {t2h1 t2t2 t2t3}\n  \n  t3 -- {t3h1 t3t2 t3t3}\n\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+
+]
+
+--
+
+.small[There are two ways to get a blue if H1 is true and only 1 way if it's
+false, thus H1 is *twice as plausible*. There are four ways to get two blues if 
+H1 is true and one way if it's false, thus H1 is *four times as plausible*.]
+--
+
+ .small[ So the probability that H1 is true is 2/3 at the first step ("two to 
+ one") and 4/5 at the second ("four to one").]
+
+---
+
+## Bayes' Rule
+
+.pull-left[
+![](https://upload.wikimedia.org/wikipedia/commons/d/d4/Thomas_Bayes.gif)
+]
+
+.pull-right[
+
+`$$P(H|D) = \frac{P(D|H)P(H)}{P(D)}$$`
+
+]
+
+---
+
+## A classic example
+
+.pull-left[
+- city of 100,000 people
+- 100 vampires
+- vampire test
+  - positive test 99% of the time for vampires
+  - positive test 1% of the time for non-vampires
+- what is the probability that someone with a positive test is a vampire?
+]
+
+.pull-right[
+
+`$$P(V|T) = \frac{P(T|V)P(V)}{P(T)} =$$`
+
+`$$\frac{.99 \times .001}{.001\times.99 + .999 \times .01} \approx .09$$`
+
+]
+
+---
+
+## Odds representation of Bayes' Rule
+
+- **Probability** of `\(A\)` is `\(\frac{A}{A+\neg A}\)`
+- **Odds** of `\(A\)` is `\(\frac{A}{\neg A}\)`
+- **Likelihood** ratio is a formalized version of plausibility: the probability 
+of getting the data when the hypothesis is *true* divided by the probability 
+when it's *false*
+--
+
+- Posterior odds = prior odds `\(\times\)` likelihood ratio
+
+`$$\frac{99}{999} = \frac{1}{999} \times \frac{99}{1}$$`
+--
+
+- So the posterior probability given a positive test is `\(\frac{99}{99+999} \approx .09\)`
+
+---
+
+## Another example from the book
+
+- 1 in 378 babies born to a 35-year-old woman will have Down syndrome (DS)
+- 86% chance of positive ultrasound test if DS
+- 5% chance of positive ultrasound test if no DS
+- What is the probability of DS given a positive test?
+--
+
+`$$\frac{1}{377} \times \frac{86}{5} = \frac{86}{1885} \approx .04$$`
+---
+
+## More on likelihood
+
+- Probability of seeing a particular test result conditional on a value of the parameter
+  - likelihood of flipping heads given that *p* = .5 (*L* = .5)
+  - likelihood of flipping heads given that *p* = .9 (*L* = .9)
+--
+
+- If we were trying to tell two coins apart (.blue[*p* = .25] vs. 
+.red[*p* = .75]) what's the likelihood ratio of a single flip?
+- If we began with a flat prior, what's the posterior probability that it's the red 
+coin if we get heads on that one flip?
+--
+
+- What if we believed beforehand that `\(\frac{3}{4}\)` of coins were blue?
+
+
+???
+
+LR of a single flip is 3
+
+FLAT PRIOR
+Posterior ODDS are 3/1; Posterior PROB is 3/4
+
+OTHER PRIOR
+Prior odds red = 1/3
+LR = 3/1
+Posterior odds = 3/3
+Posterior prob = 50%
+
+---
+
+## Example 2: private numbers
+
+- In the last example, we knew that there were only two possibilities (H1 or 
+H2). What if the answer is more open ended?
+
+--
+
+- Let's say you were curious about what proportion of the time people screen
+calls from "private numbers." The answer must be somewhere between 0 and 1, but
+let's say you have no idea at all what the proportion is.
+
+--
+
+- Let's say you got a list of valid phone numbers and started calling randomly.
+After 9 calls, here are your results: {Screen, Answer, Screen, Screen, Screen, Answer, Screen, Answer, Screen}. 
+
+- What inferences could you make at this point?
+
+---
+
+## Updating with data
+
+&lt;img src="probability-1_files/figure-html/unnamed-chunk-4-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## What more data gives us
+
+- New data not only moves the "most likely" point around, it also gives us 
+more confidence about where the true value lies. 
+
+--
+
+- On the last slide, trial 6 and trial 9 both had the same maximum likelihood
+value (.667), but the 9th trial's function is thinner (more certain).
+
+---
+
+class: middle, center
+
+# Questions?
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

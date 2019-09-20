@@ -13,6 +13,8 @@ The links to the compiled slides are below. This is very much a work in
 progress. You will also see some of the formatting evolve as I learn more about
 how xaringan works and what I like.
 
+[Syllabus](http://vaiseys.github.io/soc722/syllabus.html)
+
 [Intro and Causality](http://vaiseys.github.io/soc722/slides/intro_and_causality/intro_and_causality.html)
 
 [Causality](http://vaiseys.github.io/soc722/slides/causality/causality.html)
@@ -22,3 +24,5 @@ how xaringan works and what I like.
 [Prediction, Part 1](http://vaiseys.github.io/soc722/slides/prediction-1/prediction-1.html)
 
 [Prediction, Part 2](http://vaiseys.github.io/soc722/slides/prediction-2/prediction-2.html)
+
+[Probability, Part 1](http://vaiseys.github.io/soc722/slides/probability-1/probability-1.html)
