@@ -176,7 +176,7 @@ $~$
 $$R^2 = 1 - \frac{SSR}{TSS} = 1-\frac{\sum \hat{\varepsilon}_i^2}{\sum(Y_i - \bar{Y})}$$
 
 .footnote[This is the correlation coefficient (_r_) squared. Here's that's about
-.76. You could say "differences in life expectancy account for 76% of the 
+.76. You could say "differences in life expectancy account for 58% of the 
 variance in fertility." But remember, this is **descriptive**, not **causal**.]
 
 ---
