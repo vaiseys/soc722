@@ -71,6 +71,7 @@ class: center, middle
 # Ask two questions
 
 ---
+
 class: center, middle
 
 # Assessment time
