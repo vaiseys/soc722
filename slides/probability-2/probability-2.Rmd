@@ -1,0 +1,506 @@
+---
+title: "Probability, Part II"
+author: "<small><br>Stephen Vaisey<br>Duke University</small>"
+date: "<span style = 'font-size: 65%;'>Last update: `r Sys.Date()`<br><br>`r icon::fa_link()` <a href='stephenvaisey.com'><font color='F3F2F1'>stephenvaisey.com</font></a><br>`r icon::fa_twitter()` <a href='http://twitter.com/vaiseys'><font color='F3F2F1'>@vaiseys</font></a><br>`r icon::fa_github()` <a href='https://github.com/vaiseys'><font color='F3F2F1'>vaiseys</font></a></span> "
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: [xaringan-themer.css, addons.css]
+    self_contained: false
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      titleSlideClass: ["left", "middle", "inverse"]
+---
+
+```{r setup, echo=FALSE, message = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  fig.align = "center",
+  fig.asp = 0.618,
+  fig.retina = 3,
+  fig.width = 6,
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  out.width = "80%"
+)
+options(knitr.table.format = "html")
+options(knitr.kable.NA = '   ')
+
+library(here)
+library(knitr)
+library(tidyverse)
+library(broom)
+library(DiagrammeR)
+theme_set(theme_minimal(base_family = "Lato"))
+
+```
+
+```{r xaringan-themer, include = FALSE}
+library(xaringanthemer)
+mono_light(
+  base_color = "#00539B" ,
+  white_color = "#F3F2F1" ,
+  black_color = "#262626" ,
+  header_h1_font_size = "110px",
+  header_h2_font_size = "60px",
+  header_h3_font_size = "45px",
+  text_font_size = "28px" ,
+  code_font_size = ".65em" ,
+  header_color = "#C84E00" ,
+  text_slide_number_font_size = "0.6em" ,
+  code_highlight_color = "rgba(161,183,13,0.5)" ,
+  link_color = "#993399" ,
+  text_font_google = google_font("Lato", "400", "400i", "700") ,
+  code_font_google = google_font("Roboto Mono", "400") ,
+  extra_css = list(
+    ".remark-slide-content" = list("padding-top" = "60px") ,
+    "h1" = list("margin" = "0 0 20px 0") ,
+    "h2" = list("margin" = "0 0 20px 0") ,
+    "h3" = list("margin" = "0 0 20px 0") ,
+    "th, td" = list( "padding" = "10px" ) )
+)
+
+```
+
+class: center, middle
+
+# Ask two questions
+
+---
+class: center, middle
+
+# Assessment time
+
+---
+
+## Today's agenda
+
+1. More on probability
+
+2. Distributions
+
+3. Large sample theorems
+
+---
+class: center,middle,inverse
+
+# Probability
+
+---
+
+## Permutations
+
+.pull-left[
+
+$$_nP_k=\frac{n!}{n-k!}$$
+
+]
+
+.pull-right[
+
+There are 5 groups to present in class. How many different presentation orders 
+are possible? That is, how many ways can we arrange it?
+
+$5\times 4 \times 3 \times 2 \times 1 = 120$
+
+]
+
+???
+
+Ordering matters
+
+5 permutations of 5 = 5!/0!
+
+"Out of a set of 5, how many different ways can we order 5?"
+
+---
+
+## Combinations
+
+.pull-left[
+
+$$_nC_k = {n \choose k} = \frac{_nP_k}{k!} = \frac{n!}{k!(n-k)!} $$
+
+Pronounced "_n_ choose _k_"
+
+]
+
+.pull-right[
+
+If there are six faculty available, how many different committees of 3 can
+be formed?
+
+$$\frac{6!}{3!3!} = 20$$
+
+From a department of 20 professors, how many different committees or 5 can be 
+formed?
+
+```{r, echo = TRUE}
+choose(20, 5)
+
+```
+
+
+]
+
+???
+
+Ordering doesn't matter
+
+(6x5x4x3x2)/((3x2)(3x2)) = (6x5x4)/(3x2) = 20
+
+---
+
+## Combinations and probablity
+
+$$_nC_k = {n \choose k} = \frac{_nP_k}{k!} = \frac{n!}{k!(n-k)!} $$
+
+Let’s say 3 professors are male and 3 are female. What’s the probability that a 
+committee of 3 with zero men will be formed?
+
+How many ways are there to choose zero men out of 3? How many ways to choose 3 
+women out of three? How many total ways are there for **anything** to happen?
+
+--
+
+$$\frac{{_3C_0} \times {_3C_3}}{_6C_3} = \frac{1 \times 1}{20} = .05 $$
+
+---
+
+## Marginal, joint, and conditional probability
+
+| 2006 GSS    | no parent BA | parent BA
+|:----|-------------:|-----------:|
+| no BA | 1288 | 174 |
+| BA    | 311 | 227
+
+--
+
+.col-text[
+
+- How many ways can a single person be pulled out of the sample?
+- What's the (marginal) probability a respondent completed a BA?
+- What’s the (marginal) probability a respondent has at least one parent who completed college?
+- What’s the (joint) probability both a respondent and parent completed college?
+- What’s the (conditional) probability a respondent has a college degree if his/her parent has one?
+- What’s the (conditional) probability a respondent has a college degree if his/her parent doesn’t have one?
+
+]
+
+???
+
+2000
+.269
+.201
+.114
+.566
+.195
+
+---
+
+## Independence of two variables
+
+| 2006 GSS    | no parent BA | parent BA
+|:----|-------------:|-----------:|
+| no BA | 1288 | 174 |
+| BA    | 311 | 227
+
+Variables are independent when marginal and conditional probabilities are equal
+
+$$P(y=1|x=1) = P(y=1|x=0) = P(y=1)$$
+$$P(y=0|x=1) = P(y=0|x=0) = P(y=0)$$
+
+.center[Is this true here?]
+
+---
+
+## Quantifying departures from independence
+
+| 2006 GSS    | no parent BA | parent BA
+|:----|-------------:|-----------:|
+| no BA | 1288 | 174 |
+| BA    | 311 | 227
+
+$Pr(y = 1 | x = 0) = .195$
+
+$Pr(y = 1 | x = 1) = .566$
+
+---
+
+## Three different ways
+
+--
+
+**Difference in probabilities**
+
+.566-.195 = .371, or "37.1 percentage points higher"
+
+--
+
+**Risk ratio**
+
+.566/.195 = 2.90, or "2.90 times more likely"
+
+--
+
+**Odds ratio**
+
+(.566/.434)/(.195/.805) = 5.38, or "5.38 times greater odds"
+
+---
+
+## Using natural frequencies
+
+- Among Americans without a college-educated parent, about 20 in 100 have a 
+college degree
+
+- Among Americans with a college-educated parent, about 57 in 100 have a 
+college degree
+
+???
+
+Most of the time it’s best to just leave it at that rather than trying to 
+interpret ratios or differences
+
+---
+
+## Connecting back to Bayes' rule
+
+- What is the likelihood ratio of the "test"?
+- What are the posterior odds?
+- What is the posterior probability?
+- What are the prior odds?
+
+--
+
+Is this the same as the marginal probability of college given parent college?
+
+???
+
+Having a degree is the “disease”; having a parent with a degree is the “test”
+
+Prior odds are (311+227)/(1288+174) = .367989
+LR is Pr(P=1 | C = 1) / Pr(P=1 | C = 0) = 3.545208
+Posterior odds = 1.304597701
+Posterior prob = PO/(1+PO) = .566
+
+---
+class:inverse, center, middle
+
+# Distributions
+
+???
+
+Bernoulli, binomial, uniform, normal
+
+
+---
+
+## Online tool for visualizing distributions
+
+https://gallery.shinyapps.io/dist_calc/
+
+Play with this outside of class to build intuition!
+
+---
+
+## Bernoulli distribution
+
+- A event either happens or it doesn’t
+- This distribution has one parameter
+- $p$ is the probability of getting a "success" on each trial
+
+Examples: graduating (or not), getting a disease (or not), dying since the last survey (or not)
+
+---
+
+## Binomial distribution
+
+-  multi-trial version of the Bernoulli
+- This distribution has two parameters
+  - $p$ is the probability of getting a "success" on each trial
+  - $n$ is the number of trials
+  
+--
+
+*Example*: in a cohort of 20, how many males students can we expect to admit?
+
+---
+
+## Uniform distribution (discrete)
+
+- Every possible outcome has equal probability
+- It has two parameters
+  - $a$ is the minimum value
+  - $b$ is the maximum value
+
+--
+
+*Examples*: roll of a 6-sided die; last digit of student ID number
+
+---
+
+## Uniform distribution (continuous)
+
+- A simple continuous distribution
+- It has two parameters
+  - $a$ is the minimum value
+  - $b$ is the maximum value
+
+--
+
+*Examples*: what proportion of answers will a student get on an exam if I know nothing about the student or the exam [a=0, b=1]?; how many minutes will I wait for a bus that comes every hour and I don’t know when the last bus came [a=0, b=60]?
+
+---
+
+## Normal distribution
+
+- The most important distribution
+- Has two parameters
+  - $\mu$ is the mean (center)
+  - $\sigma$ is the standard deviation (spread)
+
+--
+
+*Examples*: heights in inches, baby weights at birth, standardized test scores, etc. (http://galtonboard.com/probabilityexamplesinlife)
+
+---
+
+## Mass vs. density
+
+.pull-left[
+
+### Mass (PMF)
+
+```{r pmf, out.width="100%"}
+d <- 
+  tibble(
+    women = 0:20 ,
+    probability = dbinom(women, size = 20, prob = .5)
+  )
+
+ggplot(d, aes(x = women , y = probability)) + geom_bar(stat = "identity")
+
+```
+
+
+
+]
+
+.pull-right[
+
+### Density (PDF)
+
+```{r pdf, out.width="100%"}
+d <- 
+  tibble(
+    inches = seq(50, 90, 1) ,
+    density = dnorm(inches, mean = 70, sd = 4)
+  )
+
+ggplot(d, aes(x = inches , y = density )) + geom_line()
+
+```
+
+]
+
+**Mass** is for discrete distributions; **density** is for continous 
+distributions.
+
+---
+
+## Cumulative distribution functions
+
+.pull-left[
+
+### Discrete
+
+```{r cdf1, out.width="100%"}
+d <- 
+  tibble(
+    women = 0:20 ,
+    probability = pbinom(women, size = 20, prob = .5)
+  )
+
+ggplot(d, aes(x = women , y = probability)) + geom_bar(stat = "identity")
+
+```
+
+]
+
+.pull-right[
+
+### Continuous
+
+```{r cdf2, out.width="100%"}
+d <- 
+  tibble(
+    inches = seq(50, 90, 1) ,
+    density = pnorm(inches, mean = 70, sd = 4)
+  )
+
+ggplot(d, aes(x = inches , y = density )) + geom_line()
+
+```
+
+]
+
+---
+
+## Why do we care about this?
+
+- Because later we're going to model distribution parameters for an outcome as 
+a *function of other variables*.
+
+- For example, if $y$ is a binomial outcome (losing your job), and $p$ is the 
+probability of losing your job, we want to see if we can predict systematic 
+differences in $p$ by things like gender, race, or age.
+
+---
+class:center,inverse,middle
+
+# Large sample theorems
+
+---
+
+## Summary
+
+.pull-left[
+
+### Law of large numbers
+
+As you get more data, your estimate(s) of the parameter(s) get closer and closer 
+to the true values of the parameter(s).
+]
+
+--
+
+.pull-right[
+
+### Central limit theorem
+
+No matter which distribution your variable takes on, the means of repeated 
+samples of it will be normally distributed.
+
+]
+
+https://ihstevenson.shinyapps.io/sample_means/
+
+---
+
+## More next time...
+
+
+
+
+
+
+
+
+
+
+

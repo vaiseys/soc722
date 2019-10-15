@@ -1,5 +1,9 @@
-# homework templates
+# homework templates and assessments
 templates/
+assessments/
+
+# Excel files
+*.xlsx
 
 # History files
 .Rhistory
