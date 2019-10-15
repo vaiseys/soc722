@@ -65,6 +65,44 @@ Ordering matters
 5 permutations of 5 = 5!/0!
 
 "Out of a set of 5, how many different ways can we order 5?"
+
+---
+
+## Combinations
+
+.pull-left[
+
+$$_nC_k = {n \choose k} = \frac{_nP_k}{k!} = \frac{n!}{k!(n-k)!} $$
+
+Pronounced "_n_ choose _k_"
+
+]
+
+.pull-right[
+
+If there are six faculty available, how many different committees of 3 can
+be formed?
+
+`$$\frac{6!}{3!3!} = 20$$`
+
+From a department of 20 professors, how many different committees or 5 can be 
+formed?
+
+
+```r
+choose(20, 5)
+```
+
+```
+## [1] 15504
+```
+]
+
+???
+
+Ordering doesn't matter
+
+(6x5x4x3x2)/((3x2)(3x2)) = (6x5x4)/(3x2) = 20
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
