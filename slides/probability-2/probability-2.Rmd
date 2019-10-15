@@ -144,14 +144,7 @@ choose(20, 5)
 
 ```
 
-
 ]
-
-???
-
-Ordering doesn't matter here
-
-$(6\times5\times4\times3\times2)/((3\times2)(3\times2)) = (6\times5\times4)/(3\times2) = 20$
 
 ---
 
