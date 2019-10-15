@@ -119,27 +119,6 @@ Ordering matters
 
 ---
 
-## Combinations
-
-$$_nC_k = {n \choose k} = \frac{_nP_k}{k!} = \frac{n!}{k!(n-k)!}$$
-
-If there are six faculty available, how many different committees of 3 can
-be formed?
-
-$$\frac{6!}{3!3!} = 20$$
-
---
-
-From a department of 20 professors, how many different committees of 5 can be 
-formed?
-
-```{r, echo = TRUE}
-choose(20, 5)
-
-```
-
----
-
 ## Combinations and probablity
 
 $$_nC_k = {n \choose k} = \frac{_nP_k}{k!} = \frac{n!}{k!(n-k)!} $$
