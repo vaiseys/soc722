@@ -149,9 +149,9 @@ choose(20, 5)
 
 ???
 
-Ordering doesn't matter
+Ordering doesn't matter here
 
-(6x5x4x3x2)/((3x2)(3x2)) = (6x5x4)/(3x2) = 20
+$(6\times5\times4\times3\times2)/((3\times2)(3\times2)) = (6\times5\times4)/(3\times2) = 20$
 
 ---
 
