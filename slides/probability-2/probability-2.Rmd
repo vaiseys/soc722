@@ -157,4 +157,4 @@ women out of three? How many total ways are there for **anything** to happen?
 
 --
 
-$$\frac{{_3C_0} \times {_3C_3}}{_6C_3} = \frac{1 \times 1}{20} = .05 $$
+$$\frac{_3C_0 \times {_3C_3}} {_6C_3} = \frac{1 \times 1}{20} = .05 $$
