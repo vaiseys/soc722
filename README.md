@@ -26,3 +26,5 @@ how xaringan works and what I like.
 [Prediction, Part 2](http://vaiseys.github.io/soc722/slides/prediction-2/prediction-2.html)
 
 [Probability, Part 1](http://vaiseys.github.io/soc722/slides/probability-1/probability-1.html)
+
+[Probability, Part 2](http://vaiseys.github.io/soc722/slides/probability-2/probability-2.html)
