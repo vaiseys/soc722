@@ -109,14 +109,6 @@ $5\times 4 \times 3 \times 2 \times 1 = 120$
 
 ]
 
-???
-
-Ordering matters
-
-5 permutations of 5 = 5!/0!
-
-"Out of a set of 5, how many different ways can we order 5?"
-
 ---
 
 ## Combinations and probablity
