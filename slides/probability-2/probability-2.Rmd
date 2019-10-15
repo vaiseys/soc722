@@ -142,3 +142,19 @@ choose(20, 5)
 Ordering doesn't matter
 
 (6x5x4x3x2)/((3x2)(3x2)) = (6x5x4)/(3x2) = 20
+
+---
+
+## Combinations and probablity
+
+$$_nC_k = {n \choose k} = \frac{_nP_k}{k!} = \frac{n!}{k!(n-k)!} $$
+
+Let’s say 3 professors are male and 3 are female. What’s the probability that a 
+committee of 3 with zero men will be formed?
+
+How many ways are there to choose zero men out of 3? How many ways to choose 3 
+women out of three? How many total ways are there for **anything** to happen?
+
+--
+
+$$\frac{{_3C_0} \times {_3C_3}}{_6C_3} = \frac{1 \times 1}{20} = .05 $$
