@@ -5,6 +5,9 @@ assessments/
 # Excel files
 *.xlsx
 
+# PowerPoint files
+*.pptx
+
 # History files
 .Rhistory
 .Rapp.history

@@ -381,7 +381,7 @@ $$SE = \frac{\widehat{s_x}}{\sqrt{n}}$$
 
 ## Standard errors of group differences
 
-- Most of the time, we care about compariing two or more groups.
+- Most of the time, we care about comparing two or more groups.
 
 --
 
@@ -416,9 +416,9 @@ What is the standard error of the difference in each case?
 ## Normal practice
 
 mean1 | mean2 | SD1 | SD2 | $n_1$  | $n_2$ | $se_1$  | $se_2$  | $se_{\text{diff}}$
-------|-------|-----|---- |--------|-------|---------|-------------------
-115   | 100   | 15  | 15  | 100    | 100   |         |
-70    | 64    | 4   | 3   | 400    | 400   |         |
+------|-------|-----|---- |--------|-------|---------|---------|---------
+115   | 100   | 15  | 15  | 100    | 100   |         |         |
+70    | 64    | 4   | 3   | 400    | 400   |         |         |
 
 What is the difference in each case?
 
