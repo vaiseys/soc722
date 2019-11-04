@@ -88,8 +88,8 @@ class: center, middle
 ## Agenda
 
 1. Confidence intervals (continued)
+
 2. Hypothesis testing
-3. Power analysis
 
 ---
 
@@ -292,10 +292,11 @@ density to "weird" (i.e., extreme) outcomes in small samples.
 
 ggplot(data.frame(x = c(-4, 4)), aes(x = x)) + 
   stat_function(fun = dt, args = list(df = 2), color = "red") +
-  stat_function(fun = dt, args = list(df = 50), color = "blue") + 
+  stat_function(fun = dt, args = list(df = 50), color = "blue") +
+  stat_function(fun = dnorm, color = "green") +
   scale_x_continuous(name = "estimate / SE", breaks = seq(-4, 4, 1)) +
   labs(title = "t-distribution", 
-       subtitle = "with 2 (red) and 50 (blue) degrees of freedom")
+       subtitle = "with 2 df (red) and 50 df (blue); normal distribution (green) for reference")
 
 ```
 
@@ -379,7 +380,7 @@ A
 
 ]
 
-.right-column[
+.pull-right[
 Either the null or alternative is true.
 
 If null, we should see a particular finding.
@@ -495,8 +496,8 @@ If our alpha was .99, then we reject the null
 # how different is the real world from the null world?
 diff <- .55 - .50
 
-# what is the SE of the estimate?
-se <- sqrt( .55 * .45 ) / sqrt( 900 )
+# what is the SE of the estimate under the null?
+se <- sqrt( .50 * .50 ) / sqrt( 900 )
 se
 
 # how many SEs is what we saw away from the null expectation?
