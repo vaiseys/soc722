@@ -487,7 +487,7 @@ advance) or the desired width of the confidence interval.
 
 Here z = 3
 That corresponds to a p-value of .0027 ( about .003)
-If our alpha was .99, then we reject the null
+If our α was .01, then we reject the null.
 
 ---
 .col-text[
@@ -666,7 +666,7 @@ reference distribution (using two-sided p-value).
 
 --
 
-5. Reject the null iff the p-value is less that or equal to 1-α, otherwise
+5. Reject the null iff the p-value is less that or equal to α, otherwise
 "fail to reject" it.
 
 ---
