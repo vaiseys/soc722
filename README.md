@@ -32,3 +32,5 @@ how xaringan works and what I like.
 [Uncertainty, Part 1](http://vaiseys.github.io/soc722/slides/uncertainty-1/uncertainty-1.html)
 
 [Uncertainty, Part 2](http://vaiseys.github.io/soc722/slides/uncertainty-2/uncertainty-2.html)
+
+[Uncertainty, Part 3](http://vaiseys.github.io/soc722/slides/uncertainty-3/uncertainty-3.html)
