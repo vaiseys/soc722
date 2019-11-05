@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Uncertainty, Part III</title>
+    <meta charset="utf-8" />
+    <meta name="author" content=" Stephen Vaisey Duke University" />
+    <link href="libs/font-awesome-5.3.1/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: left, middle, inverse, title-slide
+
+# Uncertainty, Part III
+### <small><br>Stephen Vaisey<br>Duke University</small>
+### <span style="font-size: 65%;">Last update: 2019-11-05<br><br><i class="fas  fa-link "></i> <a href='stephenvaisey.com'><font color='F3F2F1'>stephenvaisey.com</font></a><br><i class="fab  fa-twitter "></i> <a href='http://twitter.com/vaiseys'><font color='F3F2F1'><span class="citation">@vaiseys</span></font></a><br><i class="fab  fa-github "></i> <a href='https://github.com/vaiseys'><font color='F3F2F1'>vaiseys</font></a></span>
+
+---
+
+
+
+
+
+
+class: center, middle
+
+# Ask two questions
+
+---
+
+class: center, middle
+
+# Assessment time
+
+
+---
+
+## Agenda
+
+1. Power
+
+2. Uncertainty in the linear regression model
+
+---
+
+class: center, middle, inverse
+
+# Power
+
+---
+
+## Power
+
+- **Power** is the probability of rejecting the null hypothesis (i.e., "finding 
+an effect") if the true effect is a certain hypothetical magnitude.
+
+--
+
+- Power increases with two main factors:
+  + the hypothetical effect size gets bigger (easier to detect)
+  + the sample size increases (more data to detect the difference)
+
+---
+
+## Sample sizes, effect sizes, and power
+
+&lt;img src="uncertainty-3_files/figure-html/powercurve1-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Types I and II error and Bayes' theorem
+
+- If we use conventional levels of α (.05) and power (.80), what is the 
+probability of a true positive? A false positive?
+--
+
+- So what is the likelihood ratio of the "test" for a real effect?
+--
+
+- According to Bayes' theorem, what other piece of information do we need to 
+know to calculate `\(P\)`(real effect | significant result)?
+--
+
+- What if our prior probability that an effect is real is 20%? 10%? 5%? 1%? 
+What are the corresponding posterior probabilities?
+--
+
+- What does this mean about "counterintuitive" findings? What if we changed 
+the "default" p-value to .005?
+
+
+???
+
+P true positive = .80
+P false positive = .05
+LR = .80/.05 = 16
+We need the prior odds (or prior probability)
+
+PriProb	PriOdds	LR	PostOdds	PostProb
+0.200	0.250	16	4.000	0.800
+0.100	0.111	16	1.778	0.640
+0.050	0.053	16	0.842	0.457
+0.010	0.010	16	0.162	0.139
+
+PriProb	PriOdds	LR	PostOdds	PostProb
+0.200	0.250	160	40.000	0.976
+0.100	0.111	160	17.778	0.947
+0.050	0.053	160	8.421	0.894
+0.010	0.010	160	1.616	0.618
+
+
+---
+
+## Power with α = .005
+
+&lt;img src="uncertainty-3_files/figure-html/powercurve2-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Calculating sample size for an experiment
+
+.col-text[
+
+.pull-left[
+
+```r
+power.t.test(power = .8,
+             sig.level = .05,
+             delta = .3,
+             type = "two.sample",
+             alternative = "two.sided")
+```
+
+```
+## 
+##      Two-sample t test power calculation 
+## 
+##               n = 175.3851
+##           delta = 0.3
+##              sd = 1
+##       sig.level = 0.05
+##           power = 0.8
+##     alternative = two.sided
+## 
+## NOTE: n is number in *each* group
+```
+
+
+]
+
+--
+
+.pull-right[
+
+```r
+power.t.test(power = .8,
+             sig.level = .005,
+             delta = .3,
+             type = "two.sample",
+             alternative = "two.sided")
+```
+
+```
+## 
+##      Two-sample t test power calculation 
+## 
+##               n = 297.8117
+##           delta = 0.3
+##              sd = 1
+##       sig.level = 0.005
+##           power = 0.8
+##     alternative = two.sided
+## 
+## NOTE: n is number in *each* group
+```
+
+
+]
+
+]
+
+--
+
+.footnote[This would cost 70% more to field but reduce false positives through 
+p-hacking (e.g., subsetting or otherwise tweaking to find "significance")
+]
+
+---
+
+## How large a difference can we detect in the GSS?
+
+
+```r
+pwr::pwr.t2n.test(sig.level = .005,
+                  power = .8,
+                  n1 = 490,  # 2016 Blacks
+                  n2 = 2100, # 2016 Whites 
+                  alternative = "two.sided")
+```
+
+```
+## 
+##      t test power calculation 
+## 
+##              n1 = 490
+##              n2 = 2100
+##               d = 0.1831879
+##       sig.level = 0.005
+##           power = 0.8
+##     alternative = two.sided
+```
+
+---
+
+class:center,middle,inverse
+
+# Uncertainty in the LRM
+
+---
+
+## Linear regression model (LRM)
+
+`$$Y_i = \beta_0 + \beta_1 X_i + \epsilon_i$$`
+
+This is a *conditional* mean operator that can also be written:
+
+$$\mathbb{E}(Y | X=x) = \beta_0 + \beta_1 x $$
+
+---
+
+## Random numbers are samples from a population
+
+.pull-left[
+
+
+```r
+set.seed(125)
+d &lt;- tibble(x = rnorm(100),
+            e = rnorm(100))
+
+d &lt;- d %&gt;% 
+  mutate(y = .4*x + e)
+
+ggplot(d, aes(y = y, x = x)) +
+  geom_smooth(method = "lm",
+              se = FALSE) +
+  geom_point()
+```
+
+]
+
+.pull-right[
+
+&lt;img src="uncertainty-3_files/figure-html/lrm1-1.svg" width="95%" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+## LRM as a data-generating process (DGP)
+
+- Sometimes we don't just want to draw lines through a cloud
+- We think there is a true function in the world that produced the data and we 
+want to know what it is, like:
+  + the effect of education on income
+  + the effect of gender on callback rate
+  + the effect of GDP on life expectancy
+  + the effect of friends' attitudes on a person's attitude
+  + etc.
+  
+---
+
+## Simulating LRM sampling distribution
+
+
+```r
+## get a dataset of datasets
+n1 &lt;- 900 # individual dataset size
+ns &lt;- 1000 # number of datasets
+
+d2 &lt;- tibble(sim = rep(1:n1, ns))
+d2 &lt;- d2 %&gt;% 
+  arrange(sim) %&gt;% 
+  mutate(x = rnorm(n1*ns),
+         e = rnorm(n1*ns),
+         y = .4*x + e) %&gt;% 
+  group_by(sim) %&gt;% 
+  nest()
+```
+
+--
+
+We're creating a world where `\(y_i=.4x_i+\epsilon_i\)` and taking 1000 samples of
+900 "respondents" from it.
+
+---
+
+## Working with the data
+
+
+```r
+# get useable OLS function for map
+myOLS &lt;- function(df) { 
+  lm(y ~ x, data = df)
+}
+
+# create dataset of regression results and get ready to plot
+simResults &lt;- d2 %&gt;% 
+  mutate(model = map(data, myOLS),
+         tidied = map(model, broom::tidy)) %&gt;%
+  unnest(tidied, .drop = TRUE) %&gt;%
+  filter(term != "(Intercept)") %&gt;% 
+  select(sim, estimate) %&gt;% 
+  rename(beta = estimate)
+```
+
+---
+
+## Plotting the results
+
+&lt;img src="uncertainty-3_files/figure-html/unnamed-chunk-7-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Theory-based SE of $\hat{\beta}}
+
+`$$\text{SE of } \hat{\beta} = \frac{\frac{1}{n}\sum\hat{\epsilon}_i^2}{\sum(X_i-\bar{X})^2}$$`
+
+Don't worry too much about this. Just know the basic idea of what it means.
+
+---
+
+## Inference about regression coefficients
+
+With the **estimate** and the **standard error**, we can do all the same things 
+we did with means, proportions, and differences.
+
+.col-text[
+
+.pull-left[
+
+
+```r
+lm(y ~ x, data = d) %&gt;% 
+  tidy() %&gt;%
+  filter(term == "x") %&gt;% 
+  select(estimate, std.error)
+```
+
+```
+## # A tibble: 1 x 2
+##   estimate std.error
+##      &lt;dbl&gt;     &lt;dbl&gt;
+## 1    0.410    0.0910
+```
+
+]
+
+.pull-right[
+
+- What is the 95% confidence interval on `\(\hat{\beta}\)`?
+- What is the 99% confidence interval on `\(\hat{\beta}\)`?
+- What is the null hypothesis for `\(\beta\)`?
+- What is the alternative hypothesis?
+- What is the z- (or t-) statistic of the test?
+- What is the approximate p-value?
+
+]
+]
+
+???
+
+95% CI [.23, .59]
+99% CI [.17, .64]
+Null is beta = 0
+Alternative is != 0
+Test stat is 4.5
+Approximate p-value is very low -- .0000185
+
+---
+
+## Assumptions needed for inference
+
+- Two main assumptions covered in this chapter are exogeneity and 
+homoscedasticity:
+
+  - **Exogeneity**: no correlation between `\(X\)` and `\(\epsilon\)`
+  - **Homoscedasticity**: the variance of `\(\epsilon\)` doesn’t depend on `\(X\)`
+--
+
+- Dealing with heteroskedasticity is pretty easy (not covered here)
+
+- Dealing with violations of exogeneity is hard
+
+---
+
+## Controlling for confounders
+
+- We try to address concerns about endogeneity by controlling for other 
+confounding causes of Y
+
+- This is very much like subsetting the data by a third variable (Z) and 
+estimating the regression within the subgroups
+
+---
+
+## Check out visualizations for intuition
+
+.pull-left[
+
+![](http://nickchk.com/anim/Animation%20of%20Control.gif)
+]
+
+.pull-right[See nickchk.com for graphs like these!]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
