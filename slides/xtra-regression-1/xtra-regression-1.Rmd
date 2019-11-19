@@ -1,0 +1,471 @@
+---
+title: "More on the LRM, Part I"
+author: "<small><br>Stephen Vaisey<br>Duke University</small>"
+date: "<span style = 'font-size: 65%;'>Last update: `r Sys.Date()`<br><br>`r icon::fa_link()` <a href='stephenvaisey.com'><font color='F3F2F1'>stephenvaisey.com</font></a><br>`r icon::fa_twitter()` <a href='http://twitter.com/vaiseys'><font color='F3F2F1'>@vaiseys</font></a><br>`r icon::fa_github()` <a href='https://github.com/vaiseys'><font color='F3F2F1'>vaiseys</font></a></span> "
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: xaringan-themer.css
+    self_contained: false
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      titleSlideClass: ["left", "middle", "inverse"]
+---
+
+```{r setup, echo=FALSE, message = FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  fig.align = "center",
+  fig.asp = 0.618,
+  fig.retina = 3,
+  fig.width = 6,
+  message = FALSE,
+  warning = FALSE,
+  dev = "svg",
+  out.width = "80%"
+)
+options(knitr.table.format = "html")
+options(knitr.kable.NA = '   ')
+
+library(here)
+library(knitr)
+library(tidyverse)
+library(broom)
+theme_set(theme_minimal(base_family = "Lato"))
+windowsFonts("Lato" = windowsFont("Lato")) # only needed for interactive use
+
+```
+
+```{r xaringan-themer, include = FALSE}
+library(xaringanthemer)
+mono_light(
+  base_color = "#00539B" ,
+  white_color = "#FFFFFF" , # was F3F2F1
+  black_color = "#262626" ,
+  header_h1_font_size = "110px",
+  header_h2_font_size = "60px",
+  header_h3_font_size = "45px",
+  text_font_size = "28px" ,
+  code_font_size = ".65em" ,
+  header_color = "#C84E00" ,
+  text_slide_number_font_size = "0.6em" ,
+  code_highlight_color = "rgba(161,183,13,0.5)" ,
+  link_color = "#993399" ,
+  text_font_google = google_font("Lato", "400", "400i", "700") ,
+  code_font_google = google_font("Roboto Mono", "400") ,
+  extra_css = list(
+    ".remark-slide-content" = list("padding-top" = "60px") ,
+    "h1" = list("margin" = "0 0 20px 0") ,
+    "h2" = list("margin" = "0 0 20px 0") ,
+    "h3" = list("margin" = "0 0 20px 0") ,
+    "th, td" = list( "padding" = "10px" ),
+    ".small" = list("font-size" = "60%"),
+    ".small-code" = list("font-size" = ".6em") ,
+    ".smaller-code" = list("font-size" = ".5em") ,
+    ".red" = list("color" = "red") ,
+    ".blue" = list("color" = "blue") ,
+    ".col-text" = list("font-size" = "80%"))
+)
+
+
+```
+
+class: center, middle
+
+# Ask two questions
+
+---
+
+class: center, middle
+
+# Assessment time
+
+---
+
+## Agenda
+
+1. Estimators as LRMs
+
+2. Interactions
+
+3. Control attempts
+
+---
+
+class: center, middle, inverse
+
+# Estimators as LRMs
+
+---
+
+## The Basque terrorism case
+
+```{r}
+d <- read_csv(here("data", "basque.csv"))
+d <- d %>% 
+  mutate(basque = if_else(region == "Basque Country", 1L, 0L),
+         posttreat = if_else(year >= 1973, 1L, 0L ))
+```
+
+```{r basque_trend}
+
+gd <- d %>% 
+  group_by(basque, year) %>% 
+  summarize( gdp = mean(gdpcap) ,
+             posttreat = mean(posttreat))
+
+ggplot(gd, aes(y = gdp, x = year, 
+               group = factor(basque), 
+               color = factor(basque))) +
+  geom_line() +
+  geom_vline(xintercept = 1972.5, linetype = 2) +
+  theme(legend.position = "none")
+
+```
+
+---
+
+## Three estimators as LRMs
+
+1. Difference in means
+
+2. Before and after
+
+3. Difference in difference
+
+---
+
+## Difference in means
+
+```{r, echo = TRUE}
+diff_means <- 
+  lm( gdp ~ basque , data = filter(gd, year>=1973) )
+tidy(diff_means) %>% select(term, estimate, std.error)
+
+```
+
+
+---
+
+## Before and after
+
+```{r, echo = TRUE}
+b_and_a <- 
+  lm( gdp ~ posttreat , data = filter(gd, basque==1) )
+tidy(b_and_a) %>% select(term, estimate, std.error)
+
+```
+
+---
+
+## Difference-in-differences
+
+```{r, echo = TRUE}
+did <- 
+  lm( gdp ~ posttreat + basque + posttreat:basque,
+      data = gd )
+tidy(did) %>% select(term, estimate, std.error)
+
+```
+
+---
+
+## In equation form
+
+**Comparing Basque to non-Basque after 1973**
+
+$gdp_{it} = \beta_0 + \beta_1 basque_{i} + \epsilon_{it}$
+
+--
+
+**Comparing Basque before and after 1973**
+
+$gdp_{it} = \beta_0 + \beta_1 after_t + \epsilon_{it}$
+
+--
+
+**Counterfactual D-in-D**
+
+$gdp_{it} = \beta_0 + \beta_1 basque_i + \beta_2 after_t + \beta_3 (basque_i)(after_t) + \epsilon_{it}$
+
+---
+
+## Controlling for time
+
+```{r, echo = TRUE}
+gd <- gd %>% mutate(year0 = year-1973) # year-1973 (year 0 is start)
+did2 <- 
+  lm( gdp ~ posttreat + basque + year0 + posttreat:basque ,
+      data = gd )
+tidy(did2) %>% select(term, estimate, std.error)
+
+```
+
+--
+
+We will talk more about "controls" soon. For now, what is a reasonable (say, 
+95% confidence) estimate of how much terrorism affected the GDP of the Basque 
+country?
+--
+ **[€162-804]**
+
+
+???
+
+The DinD estimate doesn't change. But the SE is much lower. Why? Because the 
+original estimate (`did`) treated the change over time as *error*. It assumed
+that year-to-year changes (other than the treatment shock) were noise.
+
+---
+
+class:inverse, middle, center
+
+# Interactions
+
+---
+
+## What is an interaction?
+
+An **interaction** is when one variable **moderates** the effect of another
+variable.
+
+--
+
+$gdp_{it} = \beta_0 + \beta_1 basque_i + \beta_2 after_t + \beta_3 (basque_i)(after_t) + \epsilon_{it}$
+
+
+Here the effect of being in the Basque country (vs. elsewhere) is *moderated* by
+whether it's before or after 1973.
+
+--
+
+Equivalently, the effect of being before or after 1973 is *moderated* by 
+whether a region is in the Basque country or not.
+
+---
+
+## Types of interactions
+
+All interactions are fundamentally the same. But intepretation can sometimes
+be challenging.
+
+--
+
+1. Binary $\times$ binary (e.g., diff-in-diff)
+
+--
+
+2. Binary $\times$ numeric
+
+--
+
+3. Numeric $\times$ numeric (don't worry for now)
+
+---
+
+## Example of binary-numeric interaction
+
+--
+
+```{r}
+d <- haven::read_dta(here("data", "GSS2018.dta")) 
+cd <- d %>% 
+  select(realinc, age, degree) %>%
+  filter(age <= 50) %>% 
+  drop_na() %>% 
+  mutate(college = if_else(degree >= 3, 1L, 0L),
+         colfac = if_else(degree >= 3, "College degree", "No degree"))
+
+ggplot(cd, aes(x = age, y = realinc, 
+               color = colfac)) +
+  geom_smooth(method = "lm" ) +
+  labs(title = "Income by Age and Degree Status",
+       subtitle = "2018 General Social Survey, ages 18-50",
+       y = "Household income") +
+  theme(legend.title = element_blank())
+```
+
+---
+
+## In regression form
+
+```{r, echo = TRUE}
+lm(realinc ~ college + age + college:age, data = cd) %>% 
+  tidy() %>% select(term, estimate, std.error)
+
+```
+
+--
+
+$income_i = 12332 - 13591(college_i) + 384(age_i) + 980(college_i)(age_i) + \epsilon_i$ 
+
+---
+
+## "Centering" and interactions
+
+- As we just saw, if the numeric variable doesn't have a meaningful zero point, 
+it can make interpretation a bit complicated.
+
+- Here $-13591$ is what the model thinks the difference should be between a college-educated zero year-old and a zero year-old without a college degree.
+
+- This has *no effect* on the $\beta$s for $(college)$ or $(college)(age)$,
+however, so if that's the only goal, it's not a problem.
+
+--
+
+- If necessary, this issue can be addressed in a couple of basic ways:
+  + use a "demeaned" version of the numeric variable
+  + use a "de-minned" version of the numeric variable
+  
+---
+
+## Two equivalent approaches
+
+.pull-left[
+.col-text[
+```{r, echo = TRUE}
+cd <- cd %>% 
+  mutate(dage = age - mean(age))
+# NOTE: x*z is short for x + z + x:z
+lm(realinc ~ college * dage, data = cd) %>%
+  tidy() %>% select(term, estimate, std.error)
+
+```
+
+Now the $\beta$ on $college$ is the college/non-college difference at the *mean*
+age (about 34.9 in this sample of 18-50 year-olds).
+
+]
+]
+
+--
+
+.pull-right[
+.col-text[
+
+```{r, echo = TRUE}
+cd <- cd %>% 
+  mutate(age0 = age - 18)
+# NOTE: x*z is short for x + z + x:z
+lm(realinc ~ college * age0, data = cd) %>%
+  tidy() %>% select(term, estimate, std.error)
+
+```
+
+Now the $\beta$ on $college$ is the college/non-college difference at the 
+*minimum* age (18 years).
+
+]
+]
+
+
+---
+
+## Other uses of interactions/moderators
+
+- Do two groups change at different rates?
+
+- Do supportive social networks buffer the effect of stressors?
+
+- Do economic resources moderate the effects of divorce on children?
+
+--
+
+Can you think of other examples?
+
+---
+
+class: inverse,middle,center
+
+# Control attempts
+
+---
+
+## What is "controlling"?
+
+.center[
+
+![](http://nickchk.com/anim/Animation%20of%20Control.gif)
+]
+
+```{r}
+# from nickchk.com
+
+```
+
+
+---
+
+## Looking closer at the simulation
+
+```{r, echo = TRUE}
+set.seed(123)
+df <- data.frame(W = as.integer((1:200>100))) %>%
+  mutate(X = .5+2*W + rnorm(200)) %>%
+  mutate(Y = -.5*X + 4*W + 1 + rnorm(200))
+glimpse(df)
+
+```
+
+---
+
+## The logic of controlling
+
+```{r, echo = TRUE}
+ryw <- lm(Y ~ W, data = df)
+rxw <- lm(X ~ W, data = df)
+
+df <- df %>%
+  mutate(yhat = Y - predict(ryw),  # the Y not predicted by W
+         xhat = X - predict(rxw) ) # the X not predicted by W
+
+glimpse(df)
+
+```
+
+---
+
+## What's the right answer?
+
+```{r, echo = TRUE}
+
+lm(Y ~ X + W, data = df) %>% 
+  tidy() %>% select(term, estimate, std.error) 
+
+```
+
+---
+
+## Getting it manually
+
+```{r, echo = TRUE}
+lm(yhat ~ xhat, data = df) %>% 
+  tidy() %>% select(term, estimate, std.error)
+
+```
+
+--
+
+.footnote[Note that the standard error won't be *exactly* the same because the
+estimator doesn't know about the uncertainty coming from the regressions we
+used to remove the influence of $W$.]
+
+---
+
+class:middle,center, inverse
+
+# Questions?
+
+
+---
+
+## Next time
+
+- Diagnosing problems
+
+- Multiple regression
+
+- Matrix representation of regression

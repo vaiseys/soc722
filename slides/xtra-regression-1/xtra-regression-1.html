@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>More on the LRM, Part I</title>
+    <meta charset="utf-8" />
+    <meta name="author" content=" Stephen Vaisey Duke University" />
+    <link href="libs/font-awesome-5.3.1/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: left, middle, inverse, title-slide
+
+# More on the LRM, Part I
+### <small><br>Stephen Vaisey<br>Duke University</small>
+### <span style="font-size: 65%;">Last update: 2019-11-19<br><br><i class="fas  fa-link "></i> <a href='stephenvaisey.com'><font color='F3F2F1'>stephenvaisey.com</font></a><br><i class="fab  fa-twitter "></i> <a href='http://twitter.com/vaiseys'><font color='F3F2F1'><span class="citation">@vaiseys</span></font></a><br><i class="fab  fa-github "></i> <a href='https://github.com/vaiseys'><font color='F3F2F1'>vaiseys</font></a></span>
+
+---
+
+
+
+
+
+
+class: center, middle
+
+# Ask two questions
+
+---
+
+class: center, middle
+
+# Assessment time
+
+---
+
+## Agenda
+
+1. Estimators as LRMs
+
+2. Interactions
+
+3. Control attempts
+
+---
+
+class: center, middle, inverse
+
+# Estimators as LRMs
+
+---
+
+## The Basque terrorism case
+
+
+
+&lt;img src="xtra-regression-1_files/figure-html/basque_trend-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Three estimators as LRMs
+
+1. Difference in means
+
+2. Before and after
+
+3. Difference in difference
+
+---
+
+## Difference in means
+
+
+```r
+diff_means &lt;- 
+  lm( gdp ~ basque , data = filter(gd, year&gt;=1973) )
+tidy(diff_means) %&gt;% select(term, estimate, std.error)
+```
+
+```
+## # A tibble: 2 x 3
+##   term        estimate std.error
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)     6.64     0.228
+## 2 basque          1.13     0.323
+```
+
+
+---
+
+## Before and after
+
+
+```r
+b_and_a &lt;- 
+  lm( gdp ~ posttreat , data = filter(gd, basque==1) )
+tidy(b_and_a) %&gt;% select(term, estimate, std.error)
+```
+
+```
+## # A tibble: 2 x 3
+##   term        estimate std.error
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)     5.10     0.249
+## 2 posttreat       2.68     0.326
+```
+
+---
+
+## Difference-in-differences
+
+
+```r
+did &lt;- 
+  lm( gdp ~ posttreat + basque + posttreat:basque,
+      data = gd )
+tidy(did) %&gt;% select(term, estimate, std.error)
+```
+
+```
+## # A tibble: 4 x 3
+##   term             estimate std.error
+##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)         3.48      0.244
+## 2 posttreat           3.16      0.320
+## 3 basque              1.62      0.345
+## 4 posttreat:basque   -0.483     0.453
+```
+
+---
+
+## In equation form
+
+**Comparing Basque to non-Basque after 1973**
+
+`\(gdp_{it} = \beta_0 + \beta_1 basque_{i} + \epsilon_{it}\)`
+
+--
+
+**Comparing Basque before and after 1973**
+
+`\(gdp_{it} = \beta_0 + \beta_1 after_t + \epsilon_{it}\)`
+
+--
+
+**Counterfactual D-in-D**
+
+`\(gdp_{it} = \beta_0 + \beta_1 basque_i + \beta_2 after_t + \beta_3 (basque_i)(after_t) + \epsilon_{it}\)`
+
+---
+
+## Controlling for time
+
+
+```r
+gd &lt;- gd %&gt;% mutate(year0 = year-1973) # year-1973 (year 0 is start)
+did2 &lt;- 
+  lm( gdp ~ posttreat + basque + year0 + posttreat:basque ,
+      data = gd )
+tidy(did2) %&gt;% select(term, estimate, std.error)
+```
+
+```
+## # A tibble: 5 x 3
+##   term             estimate std.error
+##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)        4.87     0.107  
+## 2 posttreat          0.0110   0.178  
+## 3 basque             1.62     0.125  
+## 4 year0              0.147    0.00629
+## 5 posttreat:basque  -0.483    0.164
+```
+
+--
+
+We will talk more about "controls" soon. For now, what is a reasonable (say, 
+95% confidence) estimate of how much terrorism affected the GDP of the Basque 
+country?
+--
+ **[€162-804]**
+
+
+???
+
+The DinD estimate doesn't change. But the SE is much lower. Why? Because the 
+original estimate (`did`) treated the change over time as *error*. It assumed
+that year-to-year changes (other than the treatment shock) were noise.
+
+---
+
+class:inverse, middle, center
+
+# Interactions
+
+---
+
+## What is an interaction?
+
+An **interaction** is when one variable **moderates** the effect of another
+variable.
+
+--
+
+`\(gdp_{it} = \beta_0 + \beta_1 basque_i + \beta_2 after_t + \beta_3 (basque_i)(after_t) + \epsilon_{it}\)`
+
+
+Here the effect of being in the Basque country (vs. elsewhere) is *moderated* by
+whether it's before or after 1973.
+
+--
+
+Equivalently, the effect of being before or after 1973 is *moderated* by 
+whether a region is in the Basque country or not.
+
+---
+
+## Types of interactions
+
+All interactions are fundamentally the same. But intepretation can sometimes
+be challenging.
+
+--
+
+1. Binary `\(\times\)` binary (e.g., diff-in-diff)
+
+--
+
+2. Binary `\(\times\)` numeric
+
+--
+
+3. Numeric `\(\times\)` numeric (don't worry for now)
+
+---
+
+## Example of binary-numeric interaction
+
+--
+
+&lt;img src="xtra-regression-1_files/figure-html/unnamed-chunk-6-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## In regression form
+
+
+```r
+lm(realinc ~ college + age + college:age, data = cd) %&gt;% 
+  tidy() %&gt;% select(term, estimate, std.error)
+```
+
+```
+## # A tibble: 4 x 3
+##   term        estimate std.error
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   12332.     3738.
+## 2 college      -13591.     8013.
+## 3 age             384.      107.
+## 4 college:age     980.      215.
+```
+
+--
+
+`\(income_i = 12332 - 13591(college_i) + 384(age_i) + 980(college_i)(age_i) + \epsilon_i\)` 
+
+---
+
+## "Centering" and interactions
+
+- As we just saw, if the numeric variable doesn't have a meaningful zero point, 
+it can make interpretation a bit complicated.
+
+- Here `\(-13591\)` is what the model thinks the difference should be between a college-educated zero year-old and a zero year-old without a college degree.
+
+- This has *no effect* on the `\(\beta\)`s for `\((college)\)` or `\((college)(age)\)`,
+however, so if that's the only goal, it's not a problem.
+
+--
+
+- If necessary, this issue can be addressed in a couple of basic ways:
+  + use a "demeaned" version of the numeric variable
+  + use a "de-minned" version of the numeric variable
+  
+---
+
+## Two equivalent approaches
+
+.pull-left[
+.col-text[
+
+```r
+cd &lt;- cd %&gt;% 
+  mutate(dage = age - mean(age))
+# NOTE: x*z is short for x + z + x:z
+lm(realinc ~ college * dage, data = cd) %&gt;%
+  tidy() %&gt;% select(term, estimate, std.error)
+```
+
+```
+## # A tibble: 4 x 3
+##   term         estimate std.error
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)    25733.      960.
+## 2 college        20556.     1755.
+## 3 dage             384.      107.
+## 4 college:dage     980.      215.
+```
+
+Now the `\(\beta\)` on `\(college\)` is the college/non-college difference at the *mean*
+age (about 34.9 in this sample of 18-50 year-olds).
+
+]
+]
+
+--
+
+.pull-right[
+.col-text[
+
+
+```r
+cd &lt;- cd %&gt;% 
+  mutate(age0 = age - 18)
+# NOTE: x*z is short for x + z + x:z
+lm(realinc ~ college * age0, data = cd) %&gt;%
+  tidy() %&gt;% select(term, estimate, std.error)
+```
+
+```
+## # A tibble: 4 x 3
+##   term         estimate std.error
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)    19253.     1937.
+## 2 college         4044.     4312.
+## 3 age0             384.      107.
+## 4 college:age0     980.      215.
+```
+
+Now the `\(\beta\)` on `\(college\)` is the college/non-college difference at the 
+*minimum* age (18 years).
+
+]
+]
+
+
+---
+
+## Other uses of interactions/moderators
+
+- Do two groups change at different rates?
+
+- Do supportive social networks buffer the effect of stressors?
+
+- Do economic resources moderate the effects of divorce on children?
+
+--
+
+Can you think of other examples?
+
+---
+
+class: inverse,middle,center
+
+# Control attempts
+
+---
+
+## What is "controlling"?
+
+.center[
+
+![](http://nickchk.com/anim/Animation%20of%20Control.gif)
+]
+
+
+
+
+---
+
+## Looking closer at the simulation
+
+
+```r
+set.seed(123)
+df &lt;- data.frame(W = as.integer((1:200&gt;100))) %&gt;%
+  mutate(X = .5+2*W + rnorm(200)) %&gt;%
+  mutate(Y = -.5*X + 4*W + 1 + rnorm(200))
+glimpse(df)
+```
+
+```
+## Observations: 200
+## Variables: 3
+## $ W &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...
+## $ X &lt;dbl&gt; -0.06047565, 0.26982251, 2.05870831, 0.57050839, 0.62928774,...
+## $ Y &lt;dbl&gt; 3.22904817, 2.17750172, -0.29449921, 1.25793986, 0.27101618,...
+```
+
+---
+
+## The logic of controlling
+
+
+```r
+ryw &lt;- lm(Y ~ W, data = df)
+rxw &lt;- lm(X ~ W, data = df)
+
+df &lt;- df %&gt;%
+  mutate(yhat = Y - predict(ryw),  # the Y not predicted by W
+         xhat = X - predict(rxw) ) # the X not predicted by W
+
+glimpse(df)
+```
+
+```
+## Observations: 200
+## Variables: 5
+## $ W    &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...
+## $ X    &lt;dbl&gt; -0.06047565, 0.26982251, 2.05870831, 0.57050839, 0.629287...
+## $ Y    &lt;dbl&gt; 3.22904817, 2.17750172, -0.29449921, 1.25793986, 0.271016...
+## $ yhat &lt;dbl&gt; 2.40378602, 1.35223957, -1.11976137, 0.43267771, -0.55424...
+## $ xhat &lt;dbl&gt; -0.65088156, -0.32058340, 1.46830241, -0.01989752, 0.0388...
+```
+
+---
+
+## What's the right answer?
+
+
+```r
+lm(Y ~ X + W, data = df) %&gt;% 
+  tidy() %&gt;% select(term, estimate, std.error) 
+```
+
+```
+## # A tibble: 3 x 3
+##   term        estimate std.error
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)    1.14     0.109 
+## 2 X             -0.538    0.0754
+## 3 W              3.91     0.196
+```
+
+---
+
+## Getting it manually
+
+
+```r
+lm(yhat ~ xhat, data = df) %&gt;% 
+  tidy() %&gt;% select(term, estimate, std.error)
+```
+
+```
+## # A tibble: 2 x 3
+##   term         estimate std.error
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept) -1.84e-15    0.0703
+## 2 xhat        -5.38e- 1    0.0752
+```
+
+--
+
+.footnote[Note that the standard error won't be *exactly* the same because the
+estimator doesn't know about the uncertainty coming from the regressions we
+used to remove the influence of `\(W\)`.]
+
+---
+
+class:middle,center, inverse
+
+# Questions?
+
+
+---
+
+## Next time
+
+- Diagnosing problems
+
+- Multiple regression
+
+- Matrix representation of regression
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
