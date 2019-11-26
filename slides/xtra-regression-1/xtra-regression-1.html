@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
-    <title>More on the LRM, Part I</title>
+    <title>More on the LRM</title>
     <meta charset="utf-8" />
     <meta name="author" content=" Stephen Vaisey Duke University" />
     <link href="libs/font-awesome-5.3.1/css/fontawesome-all.min.css" rel="stylesheet" />
@@ -11,9 +11,9 @@
     <textarea id="source">
 class: left, middle, inverse, title-slide
 
-# More on the LRM, Part I
+# More on the LRM
 ### <small><br>Stephen Vaisey<br>Duke University</small>
-### <span style="font-size: 65%;">Last update: 2019-11-19<br><br><i class="fas  fa-link "></i> <a href='stephenvaisey.com'><font color='F3F2F1'>stephenvaisey.com</font></a><br><i class="fab  fa-twitter "></i> <a href='http://twitter.com/vaiseys'><font color='F3F2F1'><span class="citation">@vaiseys</span></font></a><br><i class="fab  fa-github "></i> <a href='https://github.com/vaiseys'><font color='F3F2F1'>vaiseys</font></a></span>
+### <span style="font-size: 65%;">Last update: 2019-11-26<br><br><i class="fas  fa-link "></i> <a href='stephenvaisey.com'><font color='F3F2F1'>stephenvaisey.com</font></a><br><i class="fab  fa-twitter "></i> <a href='http://twitter.com/vaiseys'><font color='F3F2F1'><span class="citation">@vaiseys</span></font></a><br><i class="fab  fa-github "></i> <a href='https://github.com/vaiseys'><font color='F3F2F1'>vaiseys</font></a></span>
 
 ---
 
@@ -34,13 +34,18 @@ class: center, middle
 
 ---
 
-## Agenda
+## Agenda for rest of the course
 
 1. Estimators as LRMs
 
 2. Interactions
 
 3. Control attempts
+
+4. Matrix representation of regression
+
+5. Diagnosing problems
+
 
 ---
 
@@ -84,7 +89,6 @@ tidy(diff_means) %&gt;% select(term, estimate, std.error)
 ## 1 (Intercept)     6.64     0.228
 ## 2 basque          1.13     0.323
 ```
-
 
 ---
 
@@ -342,7 +346,6 @@ Now the `\(\beta\)` on `\(college\)` is the college/non-college difference at th
 ]
 ]
 
-
 ---
 
 ## Other uses of interactions/moderators
@@ -459,11 +462,9 @@ lm(yhat ~ xhat, data = df) %&gt;%
 ## 2 xhat        -5.38e- 1    0.0752
 ```
 
---
-
-.footnote[Note that the standard error won't be *exactly* the same because the
+Note that the standard error won't be right because the
 estimator doesn't know about the uncertainty coming from the regressions we
-used to remove the influence of `\(W\)`.]
+used to remove the influence of `\(W\)`.
 
 ---
 
@@ -471,16 +472,675 @@ class:middle,center, inverse
 
 # Questions?
 
+---
+
+class: middle, center, inverse
+
+# Matrix representation of regression
 
 ---
 
-## Next time
+## Disclaimer
 
-- Diagnosing problems
+- I'm going to skip *a lot* here and go very fast.
 
-- Multiple regression
+- The idea is for you to get the gist of what is going on in estimating OLS.
 
-- Matrix representation of regression
+- If you want to know more, you'll have to dig deeper on your own.
+
+---
+
+## Start simple
+
+- Forget regression, forget matrices, open your mind!
+--
+
+- Imagine Sarah wants to buy 4 movie tickets at $9 each. How much does she 
+spend?
+--
+
+$$ s = n \times p$$
+--
+
+- Now instead imagine Sarah spent $72 on 6 movie tickets. How much did each
+ticket cost?
+--
+
+`$$72 = 6 \times p$$`
+--
+
+`$$\left( \frac{1}{6} \right) 72 =  \left( \frac{1}{6} \right) 6 \times p$$`
+--
+
+`$$12 = p$$`
+
+---
+
+## Doing more with matrices
+
+- Let's say we now have 5 groups of people buying tickets and there are two
+types of tickets: adult and child. We can use **matrices** to organize our work.
+How much does each group spend?
+--
+
+.center[
+`\(\mathbf{N} = \begin{bmatrix} 1 &amp; 2 \\ 2 &amp; 4 \\ 2 &amp; 1 \\ 8 &amp; 8 \\ 2 &amp; 5 \\ \end{bmatrix} \text{  } \mathbf{p} = \begin{bmatrix} 9.00 \\ 5.00 \end{bmatrix}\)`
+.smallish[(Adult tickets in first column, child tickets in second.)
+]
+]
+
+---
+
+## Matrix multiplication
+
+`$$\mathbf{s} = \begin{bmatrix} 19 \\ 38 \\ 23 \\ 112 \\ 43 \\ \end{bmatrix} =\begin{bmatrix} 1 &amp; 2 \\ 2 &amp; 4 \\ 2 &amp; 1 \\ 8 &amp; 8 \\ 2 &amp; 5 \\ \end{bmatrix} \times \begin{bmatrix} 9.00 \\ 5.00 \end{bmatrix}$$`
+
+--
+
+Two matrices must be *conformable for multiplication* to be multiplied. 
+The number of ROWS on the RIGHT must be equal to the number of columns on the 
+left.
+
+---
+
+## What if we want the prices instead?
+
+- I've now changed the prices. Imagine we know the following:
+
+`$$\mathbf{s} = \begin{bmatrix} 27 \\ 54 \\ 30 \\ 152 \\ 62 \\ \end{bmatrix} =\begin{bmatrix} 1 &amp; 2 \\ 2 &amp; 4 \\ 2 &amp; 1 \\ 8 &amp; 8 \\ 2 &amp; 5 \\ \end{bmatrix} \times \begin{bmatrix} ??? \\ ??? \end{bmatrix}$$`
+--
+
+- How would we get the prices? We can start with the general equation here:
+
+`$$\mathbf{s} = \mathbf{N}\mathbf{p}$$`
+--
+
+- If this were *scalar math* (i.e., normal math), we'd just divide both 
+sides by `\(\mathbf{N}\)` (or equivalently, multiply both sides by the **inverse**
+of `\(\mathbf{N}\)`).
+
+---
+
+## Basic things to know before proceeding
+
+- We need to get rid of `\(\mathbf{N}\)` from the right side so we can get 
+`\(\mathbf{p}\)` by itself.
+
+--
+
+- Sadly, there's no such thing as matrix division.
+
+--
+
+- However, we can cancel a matrix out if we multiply it by its **inverse**.
+
+--
+
+- Sadly, only square matrices (same number of rows and columns) have inverses.
+
+---
+
+## The next step: getting square
+
+- If we want to get rid of `\(\mathbf{N}\)`, we first have to make it square.
+--
+
+- A matrix multiplied by its transpose is always square! We are going to 
+**premultiply** `\(\mathbf{N}\)` by its transpose `\(\mathbf{N^T}\)`.
+--
+
+- I will now pass on to you the "transpose hand motion" I learned from
+François Nielsen.
+--
+
+`$$\mathbf{N^TN} = \begin{bmatrix} 1 &amp; 2 &amp; 2 &amp; 8 &amp; 2 \\ 2 &amp; 4 &amp; 1 &amp; 8 &amp; 5 \end{bmatrix} \times \begin{bmatrix} 1 &amp; 2 \\ 2 &amp; 4 \\ 2 &amp; 1 \\ 8 &amp; 8 \\ 2 &amp; 5 \\ \end{bmatrix} = \begin{bmatrix} 77 &amp; 86 \\ 86 &amp; 110 \end{bmatrix}$$`
+
+---
+
+## What is a matrix inverse?
+
+- In "normal math," when you multiply a number by its inverse, you get 1.
+--
+
+- In matrix math, when you multiply a matrix by its inverse, you get the
+**identity matrix** - a matrix with 1s on the diagonal and 0s everwhere else.
+--
+
+`$$\begin{bmatrix} ??? &amp; ??? \\ ??? &amp; ??? \end{bmatrix} \times \begin{bmatrix} 77 &amp; 86 \\ 86 &amp; 110 \end{bmatrix}  = \begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 1 \end{bmatrix}$$`
+--
+
+- The notation for the inverse is `\(\mathbf{(N^TN)^{-1}}\)`.
+
+---
+
+## How do we find the inverse?
+
+- The short answer is: this is why we have computers!
+--
+
+- The long answer depends on the **dimension** of the matrix to invert. For
+`\(2 \times 2\)` matrices, the inverse is:
+
+`$$\begin{bmatrix} a &amp; b  \\ c &amp; d \end{bmatrix}^{-1} = \frac{1}{ad-bc}\begin{bmatrix} d &amp; -b  \\ -c &amp; a \end{bmatrix}$$` 
+--
+
+- Therefore, for our problem, we have:
+
+`$$\begin{bmatrix} 77 &amp; 86 \\ 86 &amp; 110 \end{bmatrix}^{-1} = \frac{1}{1074} \begin{bmatrix} 110 &amp; -86  \\ -86 &amp; 77 \end{bmatrix} \approx \begin{bmatrix} .102 &amp; -.080 \\ -.080 &amp; .072 \end{bmatrix}$$` 
+
+---
+
+## Putting the pieces together
+
+Start with the basic formula:
+
+`$$\mathbf{s} = \mathbf{N}\mathbf{p}$$`
+--
+
+Make `\(\mathbf{N}\)` square on the RHS using `\(\mathbf{N^T}\)`:
+
+`$$\mathbf{N^T}\mathbf{s} = \mathbf{N^T}\mathbf{N}\mathbf{p}$$`
+--
+
+Multiply both sides by the inverse of `\(\mathbf{N^T}\mathbf{N}\)`:
+
+`$$(\mathbf{N^T}\mathbf{N})\mathbf{^{-1}}\mathbf{N^T}\mathbf{s} = (\mathbf{N^T}\mathbf{N})\mathbf{^{-1}}\mathbf{N^T}\mathbf{N}\mathbf{p}$$`
+--
+
+Cancel on the RHS and you're done! You've got `\(\mathbf{p}\)` alone.
+
+`$$(\mathbf{N^T}\mathbf{N})\mathbf{^{-1}}\mathbf{N^T}\mathbf{s} = \mathbf{p}$$`
+
+---
+
+## Solving in R
+
+
+
+.pull-left[
+
+
+```r
+N
+```
+
+```
+##      [,1] [,2]
+## [1,]    1    2
+## [2,]    2    4
+## [3,]    2    1
+## [4,]    8    8
+## [5,]    2    5
+```
+
+```r
+s
+```
+
+```
+##      [,1]
+## [1,]   27
+## [2,]   54
+## [3,]   30
+## [4,]  152
+## [5,]   62
+```
+
+]
+
+--
+
+.pull-right[
+
+
+```r
+# solve is the inverse function
+# %*% means matrix multiplication
+
+p &lt;- solve(t(N) %*% N) %*% t(N) %*% s
+p
+```
+
+```
+##      [,1]
+## [1,]   11
+## [2,]    8
+```
+
+So the adult tickets cost 11 dollars and the child tickets cost 8 dollars.
+
+]
+
+---
+
+## Extending this to regression
+
+Linear regression is fundamentally the same. We want to know what "price" 
+(i.e., what `\(\beta\)` weight) to put on each variable.
+--
+
+`$$\mathbf{y} = \mathbf{X}\mathbf{\beta} + \mathbf{\epsilon}$$`
+.center[or, in slightly different notation,]
+
+`$$\mathbf{y} = \mathbf{X}\mathbf{b} + \mathbf{e}$$`
+
+---
+
+## The blessings of (assuming) exogeneity
+
+- If we assume *exogeneity*, we can simply declare that `\(\mathbf{e}\)` has an
+expectation of 0 and is uncorrelated with `\(\mathbf{X}\)`, meaning we can ignore it
+in our calculations of `\(\mathbf{b}\)`.
+--
+
+- Therefore we have the same operation we had before to get `\(\mathbf{b}\)` all
+by itself, leaving us with:
+--
+
+`$$(\mathbf{X^T}\mathbf{X})\mathbf{^{-1}}\mathbf{X^T}\mathbf{y} = \mathbf{b}$$`
+--
+
+- This expression is called **the normal equations** and it would be nice for 
+you to memorize.
+
+---
+
+## Illustration with simple regression
+
+.smallish[
+.pull-left[
+
+```r
+data(anscombe)
+# the "design matrix"; add 1s for the intercept
+X &lt;- as.matrix(cbind(1,anscombe$x1))
+
+# this is the outcome
+y &lt;- as.matrix(anscombe$y1)
+
+# look at X
+X
+```
+
+```
+##       [,1] [,2]
+##  [1,]    1   10
+##  [2,]    1    8
+##  [3,]    1   13
+##  [4,]    1    9
+##  [5,]    1   11
+##  [6,]    1   14
+##  [7,]    1    6
+##  [8,]    1    4
+##  [9,]    1   12
+## [10,]    1    7
+## [11,]    1    5
+```
+]
+
+.pull-right[
+
+```r
+# look at y
+y
+```
+
+```
+##        [,1]
+##  [1,]  8.04
+##  [2,]  6.95
+##  [3,]  7.58
+##  [4,]  8.81
+##  [5,]  8.33
+##  [6,]  9.96
+##  [7,]  7.24
+##  [8,]  4.26
+##  [9,] 10.84
+## [10,]  4.82
+## [11,]  5.68
+```
+]]
+
+---
+
+## Visualizing the data
+
+&lt;img src="xtra-regression-1_files/figure-html/anscombe-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Comparing `lm` and matrices
+
+.pull-left[
+
+
+```r
+lm(y1 ~ x1 , data = anscombe) %&gt;% 
+  broom::tidy() %&gt;% 
+  select(term, estimate)
+```
+
+```
+## # A tibble: 2 x 2
+##   term        estimate
+##   &lt;chr&gt;          &lt;dbl&gt;
+## 1 (Intercept)    3.00 
+## 2 x1             0.500
+```
+]
+
+--
+
+.pull-right[
+
+```r
+b &lt;- solve(t(X) %*% X ) %*% t(X) %*% y
+b
+```
+
+```
+##           [,1]
+## [1,] 3.0000909
+## [2,] 0.5000909
+```
+
+]
+
+--
+
+.center[**They are the same!**]
+
+---
+
+## The regression line
+
+&lt;img src="xtra-regression-1_files/figure-html/anscombe_ols-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Getting the rest of the information
+
+.pull-left[
+
+- If we want to get `\(\mathbf{e}\)`, we can. It will end up being useful.
+
+
+```r
+e &lt;- y - X %*% b
+```
+
+- It turns out that `\(\mathbf{e^Te}\)` is the sum of squared deviations of the
+residuals.
+
+
+```r
+ssd &lt;- t(e) %*% e
+```
+
+]
+
+--
+
+.pull-right[
+
+- The error variance, `\(\sigma^2\)`, is just this value divided by `\(n-k\)`, where `\(n\)`
+is the number of observations and `\(k\)` is the number of columns in `\(\mathbf{X}\)`. 
+So `\(\sigma^2=\frac{\mathbf{e^Te}}{n-k}\)`.
+
+
+```r
+sigma2 &lt;- ssd / (length(y) - ncol(X))
+
+# want to store this as a scalar
+sigma2 &lt;- as.numeric(sigma2)
+sigma2 
+```
+
+```
+## [1] 1.529188
+```
+
+]
+
+---
+
+## Getting standard errors
+
+.smallish[
+.pull-left[
+
+- With the error variance, `\(\sigma ^2\)`, we can calculate the standard errors of
+`\(\hat{\beta_0}\)` and `\(\hat{\beta_1}\)`.
+
+- To get the SEs, we first need the **variance-covariance** matrix of the 
+estimates, which is just putting two things together we've already calculated:
+`\(\sigma^2\mathbf{(X^TX)^{-1}}\)`.
+
+- The SEs of the `\(\beta\)`s are the square roots of the diagonal elements of this 
+matrix.
+
+]]
+
+--
+
+.smallish[
+.pull-right[
+
+
+```r
+invXtX &lt;- solve( t(X) %*% X )
+sigma2 * invXtX
+```
+
+```
+##            [,1]        [,2]
+## [1,]  1.2650553 -0.12511536
+## [2,] -0.1251154  0.01390171
+```
+
+```r
+sqrt(diag( sigma2 * invXtX ))
+```
+
+```
+## [1] 1.1247468 0.1179055
+```
+
+```r
+lm(y1 ~ x1, data = anscombe) %&gt;% 
+  broom::tidy() %&gt;% 
+  select(term, std.error)
+```
+
+```
+## # A tibble: 2 x 2
+##   term        std.error
+##   &lt;chr&gt;           &lt;dbl&gt;
+## 1 (Intercept)     1.12 
+## 2 x1              0.118
+```
+]]
+
+---
+
+## Why am I teaching you this?
+
+- If we were only doing simple regression, this would be overkill. But the 
+nice part about the matrix representation is that the same exact steps work
+just as well with (say) 100,000 cases and 25 predictor variables. This makes
+things easy for **multiple regression.**
+
+--
+
+- The only "trick" is getting the matrix inverse, which is extremely fast for 
+computers these days. Everything else is just arithmetic and something a lot
+like good-old-fashioned middle-school algebra.
+
+---
+
+class:center, middle, inverse
+
+# Diagnosing problems
+
+---
+
+## Diagnostics are the "check engine" of OLS
+
+- Leverage
+
+- Standardized residuals
+
+- Cook's distance
+
+---
+
+## Leverage
+
+- **Leverage** is how much "say" each data point gets when determining the `\(\beta\)`s.
+
+- The farther away from the mean of (each) `\(x\)`, the more leverage a point has.
+
+---
+
+## Visualizing leverage
+
+&lt;img src="xtra-regression-1_files/figure-html/leverage-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Calculating leverage
+
+- We calculate leverage using the **hat matrix**, `\(\mathbf{H}\)`.
+
+- `\(\mathbf{H}\)` is called the "hat" matrix because it changes `\(\mathbf{y}\)` (the vector of responses) into `\(\mathbf{\hat{y}}\)` (a vector of predicted values).
+--
+
+$$\mathbf{\hat{y}} = \mathbf{H}\mathbf{y} $$
+--
+
+`$$\mathbf{H} = \mathbf{X}\mathbf{(X^TX)^{-1}}\mathbf{X^T}$$`
+--
+
+`\(\mathbf{H}\)` is a `\(n \times n\)` square matrix. Its diagonal elements, `\(h_{ii}\)`, are the 
+leverage. As you can see from the formula, nothing about the outcome is used
+to calculate it.
+
+---
+
+## Seeing leverage
+
+&lt;img src="xtra-regression-1_files/figure-html/unnamed-chunk-26-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## How much is too much?
+
+- Leverage always adds up to the number of columns in `\(\mathbf{X}\)` (so 2 here).
+
+--
+
+- A rule of thumb is that we get concerned when a point's leverage is greater 
+than `\(\frac{2k}{n}\)`.
+
+--
+
+- Here that's `\(\frac{2(2)}{11} \approx .364\)`. So we have no particularly 
+worrisome points.
+
+--
+
+- There's no rule about what to do with high leverage points. They just merit
+closer attention because they can have a large effect on the `\(\hat{\beta}\)`s.
+
+---
+
+## Standardized residuals
+
+- Since leverage uses only information about `\(\mathbf{X}\)`, it doesn't tell
+us how well the model fits each point.
+
+--
+
+- We compute the standardized residual as `\(\frac{e_i}{\sigma \sqrt{1-h_{ii}}}\)`.
+
+--
+
+- This is a z-score that tells us roughly how "surprising" that point would be
+if it were generated by the estimated regression model. A rule of thumb here
+is that values of 3 or more warrant close inspection.
+
+---
+
+## Cook's distance
+
+- This is a combination of leverage and residual that tells us how much the 
+regression line would change if we omitted this particular observation.
+
+- It measures the distance between all the `\(\hat{y_i}\)` values for models estimated
+with and without that particular observation (scaled by the error variance).
+
+--
+
+- There are several upper-bound rules of thumb for Cook's distance. The
+most common are `\(4/n\)`, .5, and 1.
+
+---
+
+## Getting these in R
+
+The easiest way to get these diagnostic values is to use `broom::augment`.
+
+.smallish[
+
+```r
+fit &lt;- lm(y1 ~ x1, data = anscombe)
+d &lt;- broom::augment(fit)
+d
+```
+
+```
+## # A tibble: 11 x 9
+##       y1    x1 .fitted .se.fit  .resid   .hat .sigma   .cooksd .std.resid
+##    &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+##  1  8.04    10    8.00   0.391  0.0390 0.1      1.31 0.0000614     0.0332
+##  2  6.95     8    7.00   0.391 -0.0508 0.1      1.31 0.000104     -0.0433
+##  3  7.58    13    9.50   0.601 -1.92   0.236    1.06 0.489        -1.78  
+##  4  8.81     9    7.50   0.373  1.31   0.0909   1.22 0.0616        1.11  
+##  5  8.33    11    8.50   0.441 -0.171  0.127    1.31 0.00160      -0.148 
+##  6  9.96    14   10.0    0.698 -0.0414 0.318    1.31 0.000383     -0.0405
+##  7  7.24     6    6.00   0.514  1.24   0.173    1.22 0.127         1.10  
+##  8  4.26     4    5.00   0.698 -0.740  0.318    1.27 0.123        -0.725 
+##  9 10.8     12    9.00   0.514  1.84   0.173    1.10 0.279         1.63  
+## 10  4.82     7    6.50   0.441 -1.68   0.127    1.15 0.154        -1.45  
+## 11  5.68     5    5.50   0.601  0.179  0.236    1.31 0.00427       0.166
+```
+]
+
+---
+
+## Quick visualization
+
+&lt;img src="xtra-regression-1_files/figure-html/infplot-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Another version of Anscombe
+
+&lt;img src="xtra-regression-1_files/figure-html/anscombe3-1.svg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Finding an influential case
+
+.smallish[
+
+```r
+plot(lm(y3 ~ x3, data = anscombe), which = 5)
+```
+
+&lt;img src="xtra-regression-1_files/figure-html/infplot2-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

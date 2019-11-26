@@ -194,6 +194,9 @@ th, td {
 .small {
   font-size: 60%;
 }
+.smallish {
+  font-size: 80%;
+}
 .small-code {
   font-size: .6em;
 }
