@@ -716,7 +716,7 @@ by itself, leaving us with:
 $$(\mathbf{X^T}\mathbf{X})\mathbf{^{-1}}\mathbf{X^T}\mathbf{y} = \mathbf{b}$$
 --
 
-- This expression is called **the normal equations** and it would be nice for 
+- This expression is called **the normal equation** in matrix form and it would be nice for 
 you to memorize.
 
 ---
