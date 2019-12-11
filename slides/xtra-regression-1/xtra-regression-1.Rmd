@@ -900,6 +900,55 @@ things easy for **multiple regression.**
 computers these days. Everything else is just arithmetic and something a lot
 like good-old-fashioned middle-school algebra.
 
+
+---
+class: center,inverse,middle
+
+# Multiple regression
+
+---
+
+## Multiple regression
+
+- We already spoke of this in a couple of different ways:
+
+  - Control attempts (conditioning out the effect of other variable[s])
+  - Matrix math where $\mathbf{X}$ has more than two columns
+ 
+--
+
+- But it's good to visualize that a regression with two continuous predictors is
+creating a *plane* that is minimizing the sum of squared deviations in three
+dimensions.
+
+---
+
+```{r 3D, out.height="100%"}
+
+pwt <- seq(min(mtcars$wt), max(mtcars$wt), length.out = 30) 
+php <- seq(min(mtcars$hp), max(mtcars$hp), length.out = 30)
+preds <- expand.grid(wt = pwt, hp = php, KEEP.OUT.ATTRS = FALSE)
+
+plot_lm <- lm(mpg ~ wt + hp, data = mtcars)
+
+preds$mpg <- predict(plot_lm, newdata = preds)
+
+mpg <- reshape2::acast(preds, wt ~ hp, value.var = "mpg")
+
+library(plotly)
+plot_ly(z = ~mpg ) %>% 
+  add_surface(x = pwt, y = php, opacity = .5) %>% 
+  add_markers(x = mtcars$wt, 
+              y = mtcars$hp, 
+              z = mtcars$mpg,
+              marker = list(size=5, opacity=.8)) %>% 
+  hide_colorbar() %>% 
+  hide_legend()
+
+```
+
+
+
 ---
 
 class:center, middle, inverse
@@ -908,7 +957,7 @@ class:center, middle, inverse
 
 ---
 
-## Diagnostics are the "check engine" of OLS
+## Diagnostics are the "check engine light" of OLS
 
 - Leverage
 
