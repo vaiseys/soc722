@@ -326,7 +326,7 @@ That is, minimizing $SSR = \sum\hat{\varepsilon_i}^2$ or $RMSE= \sqrt{\frac{SSR}
 
 ### Estimated coefficients in mathematical expressions:
 
-$$\hat{\beta} = \frac{\sum(Y_i - \bar{Y}) (X_i - \bar{X})} {\sum(X_i - \bar{X})}$$
+$$\hat{\beta} = \frac{\sum(Y_i - \bar{Y}) (X_i - \bar{X})} {\sum(X_i - \bar{X})^2}$$
 
 $$\hat{\alpha} = \bar{Y} - \hat{\beta}\bar{X} $$
 
