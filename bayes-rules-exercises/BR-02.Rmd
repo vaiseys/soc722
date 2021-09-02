@@ -1,0 +1,77 @@
+---
+title: "Bayes Rules! Chapter 2 Exercises"
+output: 
+  html_notebook: 
+    code_folding: none
+    theme:
+      version: 4
+      bootswatch: cosmo
+---
+
+# Chapter replication
+
+Loading packages.
+
+```{r, message = FALSE}
+library(bayesrules)
+library(tidyverse)
+library(janitor)
+```
+
+Bring in the fake news data.
+
+```{r}
+data(fake_news)
+```
+
+Tabulate oneway (fakeness).
+
+```{r}
+fake_news |>
+  tabyl(type) |>
+  adorn_totals("row")
+```
+
+Tabulate twoway (fakeness and exclamation point).
+
+```{r}
+fake_news |>
+  tabyl(title_has_excl, type) |>
+  adorn_totals("row")
+```
+
+## \*Steve's corner
+
+There's another way to do this calculation. We can express the presence of an exclamation point as a "test" for the "disease" of fakeness. This test has a *likelihood ratio*. The likelihood ratio is:
+
+$$\frac{P\text{(disease = yes | test = positive)}}{P\text{(disease = no | test = positive)}}$$ Another way to say this is:
+
+$$LR = \frac{P(\text{true positive})}{P\text{(false positive)}}$$
+
+In this case it's $\frac{16/44}{2/88} = 16$.
+
+I find the likelihood ratio version of Bayes much easier to work with because it allows dispensing with the "normalizing constant" at the cost of using odds rather than probability. What's the difference? Let's look.
+
+We know the *prior probability* that an article is fake (based on this dataset) is $60/150 = .4$. We can express the same information as *odds* by saying the *prior odds* that an article is fake are $60/90 = .667$ or $2/3$ or, as we might say out loud, "2 to 3."
+
+To get the posterior odds, we use this formula:
+
+$$
+\text{Posterior Odds} = \text{Prior Odds} \times \text{LR}
+$$
+
+Note there's no more normalizing constant! So we get:
+
+$$
+\text{Posterior Odds} = \frac{2}{3} \times 16 = \frac{32}{3} \approx 10.67
+$$
+
+Well that was easy but what does it mean? We convert odds to probability simply by dividing odds by odds plus 1. So...
+
+$$
+\frac{10.67}{11.67} \approx .91
+$$
+
+So if there's an exclamation point, we estimate there's a 91% chance it's fake news.
+
+You might be asking, is this really easier? Well, it is for me, but getting the right answer is the important thing! Use whatever makes sense to you.
